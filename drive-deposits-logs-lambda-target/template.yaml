@@ -1,0 +1,154 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: stack pattern drive-deposits-event-rules-dev; CloudFormation template for EventBridge Rules and Cloudwatch Log Group with Lambda targets
+
+Parameters:
+  Environment:
+    Type: String
+    Description: "The environment name (e.g., dev, staging, production)"
+
+  UseLocalstack:
+    Type: String
+    Default: "false"
+    Description: "Flag to determine if Localstack should be used"
+
+Resources:
+  DriveDepositsLogGroupBankLevel:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/events/drive-deposits-log-group-bank-level-${Environment}"
+      RetentionInDays: 1
+
+  DriveDepositsBankLevelRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: drive-deposits-bank-level
+      EventPattern:
+        source:
+          - "drive-deposits"
+        detail-type:
+          - "bank-level"
+      State: ENABLED
+      EventBusName: DriveDepositsEventBus
+      Targets:
+        - Id: "DriveDepositsLogGroupBankLevelTarget"
+          Arn: !GetAtt DriveDepositsLogGroupBankLevel.Arn
+
+  DriveDepositsLogGroupPortfolioLevel:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/events/drive-deposits-log-group-banks-level-${Environment}"
+      RetentionInDays: 1
+
+  DriveDepositsPortfolioLevelRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: drive-deposits-banks-level
+      EventPattern:
+        source:
+          - "drive-deposits"
+        detail-type:
+          - "portfolio-level"
+      State: ENABLED
+      EventBusName: DriveDepositsEventBus
+      Targets:
+        - Id: "DriveDepositsLogGroupPortfolioLevelTarget"
+          Arn: !GetAtt DriveDepositsLogGroupPortfolioLevel.Arn
+
+
+  DriveDepositsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      # Reduce name collisions let AWS CloudFormation generate the name
+      # TableName: drive-deposits
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+
+  DriveDepositsByLevelLambdaWriterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "drive_deposits_by_level_lambda_writer_${Environment}"
+      CodeUri: .
+      Handler: bootstrap
+      Runtime: provided.al2023
+      Architectures:
+        - arm64
+      Timeout: 30
+      Environment:
+        Variables:
+          RUST_LOG: debug
+          USE_LOCALSTACK: !Ref UseLocalstack
+          DRIVE_DEPOSITS_TABLE_NAME: !Ref DriveDepositsTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DriveDepositsTable
+    Metadata:
+      BuildMethod: rust-cargolambda
+      BuildProperties:
+        Binary: by_level_lambda_writer
+        BuildArgs: --release
+        Cache: true
+
+  # New duplicated rule functionality from drive-deposits-banks-level
+  # following best practice for eb rules https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rules-best-practices.html
+  DriveDepositsPortfolioLevelRuleForLambda:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: drive-deposits-banks-level-for-lambda
+      EventPattern:
+        source:
+          - "drive-deposits"
+        detail-type:
+          - "portfolio-level"
+      State: ENABLED
+      EventBusName: DriveDepositsEventBus
+      Targets:
+        - Id: "DriveDepositsByLevelLambdaTarget"
+          Arn: !GetAtt DriveDepositsByLevelLambdaWriterFunction.Arn
+
+  # {
+  #  "Version": "2012-10-17",
+  #  "Id": "default",
+  #  "Statement": [
+  #    {
+  #      "Sid": "drive-deposits-event-rules-dev-DriveDepositsByLevelLambdaPermission-3acnXMVxvasI",
+  #      "Effect": "Allow",
+  #      "Principal": {
+  #        "Service": "events.amazonaws.com"
+  #      },
+  #      "Action": "lambda:InvokeFunction",
+  #      "Resource": "arn:aws:lambda:us-west-2:164190501998:function:by_level_lambda_writer_using_sam",
+  #      "Condition": {
+  #        "ArnLike": {
+  #          "AWS:SourceArn": "arn:aws:events:us-west-2:164190501998:rule/DriveDepositsEventBus/drive-deposits-banks-level-for-lambda"
+  #        }
+  #      }
+  #    }
+  #  ]
+  #}
+  DriveDepositsByLevelLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref DriveDepositsByLevelLambdaWriterFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt DriveDepositsPortfolioLevelRuleForLambda.Arn
+
+
+Outputs:
+  DriveDepositsTableName:
+    Description: "DriveDepositTable name"
+    Value: !Ref DriveDepositsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-DRIVE-DEPOSITS-TABLE-NAME'

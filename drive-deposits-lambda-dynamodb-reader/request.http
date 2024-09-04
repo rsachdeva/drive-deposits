@@ -1,0 +1,59 @@
+@host = https://rcuxkiyq3l.execute-api.us-west-2.amazonaws.com
+
+###
+GET {{host}}/by-level-for-portfolios/delta-growth
+Content-Type: application/json
+
+
+###
+GET {{host}}/portfolios/cad34c28-2f14-49be-8f4f-30a72ea9a367/by-level-for-banks/delta-growth
+Content-Type: application/json
+
+
+###
+GET {{host}}/portfolios/cad34c28-2f14-49be-8f4f-30a72ea9a367/by-level-for-deposits/delta-growth
+Content-Type: application/json
+
+
+###
+GET {{host}}/portfolios/cad34c28-2f14-49be-8f4f-30a72ea9a367/by-level-for-deposits/delta-growth
+Content-Type: application/json
+
+###
+GET {{host}}/portfolios/cad34c28-2f14-49be-8f4f-30a72ea9a367/by-level-for-deposits/delta-growth/maturity-date
+Content-Type: application/json
+
+### with localstack
+GET /lambda-url/by_level_lambda_reader/by-level-for-portfolios/delta-growth?order=desc&top_k=1 HTTP/1.1
+Host: [::]:9000
+
+# {
+#  "ordered": [
+#    {
+#      "portfolio_uuid": "eb0dd4af-e212-4191-8135-012499338d32",
+#      "outcome": {
+#        "delta": {
+#          "period": "1",
+#          "period_unit": "Month",
+#          "growth": "367.76"
+#        },
+#        "maturity": {
+#          "amount": "108580.50",
+#          "interest": "24462.92",
+#          "total": "133043.42"
+#        },
+#        "errors": []
+#      }
+#    }
+#  ],
+#  "order": "desc",
+#  "top_k": 1
+#}
+
+
+### with localstack
+# /portfolios/:pk_portfolio_uuid/by-level-for-banks/delta-growth
+GET /lambda-url/by_level_lambda_reader/portfolios/0d22bd83-7897-482f-89a2-e09f4af86965/by-level-for-banks/delta-growth?
+    order=desc&
+    top_k=10 HTTP/1.1
+Host: [::]:9000

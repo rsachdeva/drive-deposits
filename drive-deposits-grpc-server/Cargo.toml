@@ -1,0 +1,20 @@
+[package]
+name = "drive-deposits-grpc-server"
+version = "0.10.0"
+edition = "2021"
+
+[dependencies]
+tonic = "0.12.0"
+tonic-reflection = "0.12.0"
+tonic-types = "0.12.0"
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+tokio = { version = "1.38.0", features = ["full"] }
+
+# workspace member depdenencies
+drive-deposits-rest-types = { path = "../drive-deposits-rest-types" }
+# proto generated dependency here the drive-deposits-proto-grpc-types is still package
+# name so with dashes
+drive-deposits-proto-grpc-types = { path = "../drive-deposits-proto-grpc-types" }
+drive-deposits-cal-types = { path = "../drive-deposits-cal-types" }
+drive-deposits-event-source = { path = "../drive-deposits-event-source" }

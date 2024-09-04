@@ -1,0 +1,9 @@
+version = 0.1
+[dev.deploy.parameters]
+stack_name = "drive-deposits-event-bus-dev"
+resolve_s3 = true
+s3_prefix = "drive-deposits-event-bus-dev"
+region = "us-west-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = []

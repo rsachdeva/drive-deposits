@@ -1,0 +1,30 @@
+[workspace]
+members = [
+    # -- Libraries
+    "drive-deposits-event-source",
+    "drive-deposits-cal-types",
+    "drive-deposits-rest-types",
+    "drive-deposits-proto-grpc-types",
+    "drive-deposits-lambda-db-types",
+    # -- Binaries
+    "drive-deposits-check-cmd",
+    "drive-deposits-grpc-server",
+    "drive-deposits-rest-gateway-server",
+    "drive-deposits-logs-lambda-target",
+    "drive-deposits-lambda-dynamodb-reader",
+]
+default-members = [
+    # -- Libraries
+    "drive-deposits-event-source",
+    "drive-deposits-cal-types",
+    "drive-deposits-rest-types",
+    "drive-deposits-proto-grpc-types",
+    "drive-deposits-lambda-db-types",
+    # -- Binaries
+    "drive-deposits-check-cmd",
+    "drive-deposits-grpc-server",
+    "drive-deposits-rest-gateway-server",
+    "drive-deposits-logs-lambda-target",
+    "drive-deposits-lambda-dynamodb-reader",
+]
+resolver = "2"

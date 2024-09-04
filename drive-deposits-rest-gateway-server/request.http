@@ -1,0 +1,846 @@
+@host = http://localhost:3000
+
+###
+# with with root URL
+POST {{host}}/
+Content-Type: application/json
+Authorization: Bearer token
+Accept-Encoding: br, gzip, deflate
+
+< ./data/rest_request_valid.json
+
+# Expected Output:
+# For Calculate Drive Deposits API, use POST with Path /api/drive-deposits/calculate-portfolio
+
+###
+# with correct API path
+POST {{host}}/api/drive-deposits/calculate-portfolio
+Content-Type: application/json
+Authorization: Bearer token
+Accept-Encoding: br, gzip, deflate
+
+< ./data/rest_request_valid.json
+
+# Expected Output:
+# {
+#  "uuid": "76326bad-a359-4d3d-850d-c380970156d1",
+#  "banks": [
+#    {
+#      "uuid": "309a9682-05b9-4afa-961d-9249a76020de",
+#      "name": "PEACEMAKER",
+#      "bank_tz": "America/New_York",
+#      "deposits": [
+#        {
+#          "uuid": "5707c463-9227-4077-bb2f-421d2816bb76",
+#          "account": "1234",
+#          "account_type": "BrokerageCertificateOfDeposit",
+#          "apy": "2.4",
+#          "years": "7",
+#          "outcome": {
+#            "delta": {
+#              "period": "1",
+#              "period_unit": "Month",
+#              "growth": "21.68"
+#            },
+#            "maturity": {
+#              "amount": "10990",
+#              "interest": "1846.32",
+#              "total": "12836.32"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2024-02-16",
+#            "maturity_date_in_bank_tz": "2031-02-14",
+#            "errors": []
+#          }
+#        }
+#      ],
+#      "outcome": {
+#        "delta": {
+#          "period": "1",
+#          "period_unit": "Month",
+#          "growth": "21.68"
+#        },
+#        "maturity": {
+#          "amount": "10990",
+#          "interest": "1846.32",
+#          "total": "12836.32"
+#        },
+#        "errors": []
+#      }
+#    },
+#    {
+#      "uuid": "4df271b1-57a2-4c90-9485-266dd246f716",
+#      "name": "VISION-BANK",
+#      "bank_tz": "America/Los_Angeles",
+#      "deposits": [
+#        {
+#          "uuid": "8b616e50-1f8a-4fdd-82b7-7809cb3dd6d3",
+#          "account": "1234",
+#          "account_type": "BrokerageCertificateOfDeposit",
+#          "apy": "5",
+#          "years": "7",
+#          "outcome": {
+#            "delta": {
+#              "period": "1",
+#              "period_unit": "Month",
+#              "growth": "45.16"
+#            },
+#            "maturity": {
+#              "amount": "10990",
+#              "interest": "3846.50",
+#              "total": "14836.50"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2023-02-16",
+#            "maturity_date_in_bank_tz": "2030-02-14",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "551d5a0b-ff34-4ff4-9301-61e5394327c1",
+#          "account": "9898",
+#          "account_type": "CertificateOfDeposit",
+#          "apy": "2.22",
+#          "years": "1",
+#          "outcome": {
+#            "delta": {
+#              "period": "1",
+#              "period_unit": "Month",
+#              "growth": "10.04"
+#            },
+#            "maturity": {
+#              "amount": "5500",
+#              "interest": "122.10",
+#              "total": "5622.10"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2020-02-16",
+#            "maturity_date_in_bank_tz": "2021-02-15",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "8041acb5-99b1-42ea-af70-b87d98824bda",
+#          "account": "3833",
+#          "account_type": "Savings",
+#          "apy": "3.75",
+#          "years": "20",
+#          "outcome": {
+#            "delta": {
+#              "period": "1",
+#              "period_unit": "Month",
+#              "growth": "44.72"
+#            },
+#            "maturity": {
+#              "amount": "10000.50",
+#              "interest": "10882.06",
+#              "total": "20882.56"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2024-02-16",
+#            "maturity_date_in_bank_tz": "2044-02-11",
+#            "errors": []
+#          }
+#        }
+#      ],
+#      "outcome": {
+#        "delta": {
+#          "period": "1",
+#          "period_unit": "Month",
+#          "growth": "99.92"
+#        },
+#        "maturity": {
+#          "amount": "26490.50",
+#          "interest": "14850.66",
+#          "total": "41341.16"
+#        },
+#        "errors": []
+#      }
+#    },
+#    {
+#      "uuid": "e2cbcf9a-263c-4221-a4c8-05793595bc8a",
+#      "name": "MOUNTAIN",
+#      "bank_tz": "America/Chicago",
+#      "deposits": [
+#        {
+#          "uuid": "2c8f4d1f-3d3f-4113-a834-efaaff30df36",
+#          "account": "1234",
+#          "account_type": "Checking",
+#          "apy": "0.01",
+#          "years": "1",
+#          "outcome": {
+#            "delta": {
+#              "period": "1",
+#              "period_unit": "Month",
+#              "growth": "0.00"
+#            },
+#            "maturity": {
+#              "amount": "100",
+#              "interest": "0.01",
+#              "total": "100.01"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2019-01-01",
+#            "maturity_date_in_bank_tz": "2020-01-01",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "bf0e7eaa-1037-4126-aa53-9657bed2c787",
+#          "account": "1256",
+#          "account_type": "CertificateOfDeposit",
+#          "apy": "5.40",
+#          "years": "2",
+#          "outcome": {
+#            "delta": {
+#              "period": "1",
+#              "period_unit": "Month",
+#              "growth": "227.91"
+#            },
+#            "maturity": {
+#              "amount": "50000",
+#              "interest": "5545.80",
+#              "total": "55545.80"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2018-04-07",
+#            "maturity_date_in_bank_tz": "2020-04-06",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "1119868a-d39c-4125-a65e-944f91a06f82",
+#          "account": "1111",
+#          "account_type": "CertificateOfDeposit",
+#          "apy": "1.01",
+#          "years": "10",
+#          "outcome": {
+#            "delta": {
+#              "period": "1",
+#              "period_unit": "Month",
+#              "growth": "18.25"
+#            },
+#            "maturity": {
+#              "amount": "21000",
+#              "interest": "2220.04",
+#              "total": "23220.04"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2018-08-14",
+#            "maturity_date_in_bank_tz": "2028-08-11",
+#            "errors": []
+#          }
+#        }
+#      ],
+#      "outcome": {
+#        "delta": {
+#          "period": "1",
+#          "period_unit": "Month",
+#          "growth": "246.16"
+#        },
+#        "maturity": {
+#          "amount": "71100",
+#          "interest": "7765.85",
+#          "total": "78865.85"
+#        },
+#        "errors": []
+#      }
+#    }
+#  ],
+#  "outcome": {
+#    "delta": {
+#      "period": "1",
+#      "period_unit": "Month",
+#      "growth": "367.76"
+#    },
+#    "maturity": {
+#      "amount": "108580.50",
+#      "interest": "24462.83",
+#      "total": "133043.33"
+#    },
+#    "errors": []
+#  },
+#  "created_at": "2024-07-18 03:37:40.958417 UTC"
+#}
+
+
+
+###
+POST {{host}}/api/drive-deposits/calculate-portfolio
+Content-Type: application/json
+Authorization: Bearer token
+Accept-Encoding: br, gzip, deflate
+
+< ./data/rest_request_invalid_decimal.json
+
+# Expected Output:
+# Input validation error: [new_delta.period: Validation error: length [{"value": String(""), "min": Number(1)}], Incorrect value: . Must be a valid decimal number., , new_banks[0].new_deposits[1].apy: Incorrect value: Hello. Must be a valid decimal number., ]
+
+
+
+###
+POST {{host}}/api/drive-deposits/calculate-portfolio
+Content-Type: application/json
+Authorization: Bearer token
+Accept-Encoding: br, gzip, deflate
+
+< ./data/rest_request_invalid_period_unit_account_type_decimal_bank_tz_start_date.json
+
+# Expected Output:
+# Input validation error: [new_banks[0].bank_tz: Error: failed to parse timezone. Incorrect timezone: America/Chicag. Must be a valid timezone., new_banks[0].new_deposits[0].start_date_in_bank_tz: Error: input contains invalid characters. Incorrect date format: 201901-01. Must be in ISO 8601 format YYYY-MM-DD., new_banks[0].new_deposits[2].apy: Incorrect value: Incorrect!. Must be a valid decimal number., new_banks[2].new_deposits[2].account_type: Error: Matching variant not found. Incorrect account_type: Svings. Must be Checking, Savings, CertificateOfDeposit, or BrokerageCertificateOfDeposit., , new_delta.period_unit: Incorrect period_unit: Century!. Must be Day, Week, Month, or Year., ]
+
+
+###
+POST {{host}}/api/drive-deposits/calculate-portfolio
+Content-Type: application/json
+Authorization: Bearer token
+Accept-Encoding: br, gzip, deflate
+
+< ./data/rest_request_invalid_json_structure.json
+
+# Expected Output:
+# Axum Json Rejection error: JsonSyntaxError(JsonSyntaxError(Error { inner: Error { path: Path { segments: [Unknown] }, original: Error("key must be a string", line: 2, column: 3) } }))
+
+###
+POST {{host}}/api/drive-deposits/calculate-portfolio
+Content-Type: application/json
+Authorization: Bearer token
+Accept-Encoding: br, gzip, deflate
+
+< ./data/rest_request_valid_90_days_delta_period.json
+
+
+# Expected output
+# {
+#  "uuid": "db7b799c-5db9-4e8d-bd5b-98984decd594",
+#  "banks": [
+#    {
+#      "uuid": "5b9076db-0241-4737-a189-89e1306d0124",
+#      "name": "PEACEMAKER",
+#      "bank_tz": "America/New_York",
+#      "deposits": [
+#        {
+#          "uuid": "32ec0855-b788-417f-b5e3-710cf7b049c9",
+#          "account": "1234",
+#          "account_type": "BrokerageCertificateOfDeposit",
+#          "apy": "2.4",
+#          "years": "7",
+#          "outcome": {
+#            "delta": {
+#              "period": "90",
+#              "period_unit": "Day",
+#              "growth": "65.04"
+#            },
+#            "maturity": {
+#              "amount": "10990",
+#              "interest": "1846.32",
+#              "total": "12836.32"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2024-02-16",
+#            "maturity_date_in_bank_tz": "2031-02-14",
+#            "errors": []
+#          }
+#        }
+#      ],
+#      "outcome": {
+#        "delta": {
+#          "period": "90",
+#          "period_unit": "Day",
+#          "growth": "65.04"
+#        },
+#        "maturity": {
+#          "amount": "10990",
+#          "interest": "1846.32",
+#          "total": "12836.32"
+#        },
+#        "errors": []
+#      }
+#    },
+#    {
+#      "uuid": "4d98a7b2-3a24-4270-8737-8fcd75b207ce",
+#      "name": "MOUNTAIN",
+#      "bank_tz": "America/Chicago",
+#      "deposits": [
+#        {
+#          "uuid": "b5ca91a3-1cb9-4c69-9fab-bf6d1f5b04e2",
+#          "account": "1234",
+#          "account_type": "Checking",
+#          "apy": "0.01",
+#          "years": "1",
+#          "outcome": {
+#            "delta": {
+#              "period": "90",
+#              "period_unit": "Day",
+#              "growth": "0.00"
+#            },
+#            "maturity": {
+#              "amount": "100",
+#              "interest": "0.01",
+#              "total": "100.01"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2019-01-01",
+#            "maturity_date_in_bank_tz": "2020-01-01",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "4492ef0d-c99d-4e09-9564-07683d760633",
+#          "account": "1256",
+#          "account_type": "CertificateOfDeposit",
+#          "apy": "5.40",
+#          "years": "2",
+#          "outcome": {
+#            "delta": {
+#              "period": "90",
+#              "period_unit": "Day",
+#              "growth": "683.73"
+#            },
+#            "maturity": {
+#              "amount": "50000",
+#              "interest": "5545.80",
+#              "total": "55545.80"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2018-04-07",
+#            "maturity_date_in_bank_tz": "2020-04-06",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "9e57e522-115b-4d8c-a182-04fba6e54124",
+#          "account": "1111",
+#          "account_type": "CertificateOfDeposit",
+#          "apy": "1.01",
+#          "years": "10",
+#          "outcome": {
+#            "delta": {
+#              "period": "90",
+#              "period_unit": "Day",
+#              "growth": "54.74"
+#            },
+#            "maturity": {
+#              "amount": "21000",
+#              "interest": "2220.04",
+#              "total": "23220.04"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2018-08-14",
+#            "maturity_date_in_bank_tz": "2028-08-11",
+#            "errors": []
+#          }
+#        }
+#      ],
+#      "outcome": {
+#        "delta": {
+#          "period": "90",
+#          "period_unit": "Day",
+#          "growth": "738.47"
+#        },
+#        "maturity": {
+#          "amount": "71100",
+#          "interest": "7765.85",
+#          "total": "78865.85"
+#        },
+#        "errors": []
+#      }
+#    },
+#    {
+#      "uuid": "49cf775a-5c32-4995-abf4-65c230c29b15",
+#      "name": "VISION-BANK",
+#      "bank_tz": "America/Los_Angeles",
+#      "deposits": [
+#        {
+#          "uuid": "8df47207-1992-4438-b4ca-8f7339e4cdd9",
+#          "account": "1234",
+#          "account_type": "BrokerageCertificateOfDeposit",
+#          "apy": "5",
+#          "years": "7",
+#          "outcome": {
+#            "delta": {
+#              "period": "90",
+#              "period_unit": "Day",
+#              "growth": "135.49"
+#            },
+#            "maturity": {
+#              "amount": "10990",
+#              "interest": "3846.50",
+#              "total": "14836.50"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2023-02-16",
+#            "maturity_date_in_bank_tz": "2030-02-14",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "ace50ced-7a56-4eac-9eee-dec01cf25d23",
+#          "account": "9898",
+#          "account_type": "CertificateOfDeposit",
+#          "apy": "2.22",
+#          "years": "1",
+#          "outcome": {
+#            "delta": {
+#              "period": "90",
+#              "period_unit": "Day",
+#              "growth": "30.11"
+#            },
+#            "maturity": {
+#              "amount": "5500",
+#              "interest": "122.10",
+#              "total": "5622.10"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2020-02-16",
+#            "maturity_date_in_bank_tz": "2021-02-15",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "29b1a525-2636-4548-a00c-60f7d34b102c",
+#          "account": "3833",
+#          "account_type": "Savings",
+#          "apy": "3.75",
+#          "years": "20",
+#          "outcome": {
+#            "delta": {
+#              "period": "90",
+#              "period_unit": "Day",
+#              "growth": "134.16"
+#            },
+#            "maturity": {
+#              "amount": "10000.50",
+#              "interest": "10882.06",
+#              "total": "20882.56"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2024-02-16",
+#            "maturity_date_in_bank_tz": "2044-02-11",
+#            "errors": []
+#          }
+#        }
+#      ],
+#      "outcome": {
+#        "delta": {
+#          "period": "90",
+#          "period_unit": "Day",
+#          "growth": "299.76"
+#        },
+#        "maturity": {
+#          "amount": "26490.50",
+#          "interest": "14850.66",
+#          "total": "41341.16"
+#        },
+#        "errors": []
+#      }
+#    }
+#  ],
+#  "outcome": {
+#    "delta": {
+#      "period": "90",
+#      "period_unit": "Day",
+#      "growth": "1103.27"
+#    },
+#    "maturity": {
+#      "amount": "108580.50",
+#      "interest": "24462.83",
+#      "total": "133043.33"
+#    },
+#    "errors": []
+#  },
+#  "created_at": "2024-07-18 03:58:16.546197 UTC"
+#}
+
+
+###
+POST {{host}}/api/drive-deposits/calculate-portfolio
+Content-Type: application/json
+Authorization: Bearer token
+Accept-Encoding: br, gzip, deflate
+
+< ./data/rest_request_valid_6_months_delta_period.json
+
+
+# {
+#  "uuid": "45fc9d46-ee54-4f7f-918d-9f4f599995f4",
+#  "banks": [
+#    {
+#      "uuid": "7b0740cc-7acc-4000-b38b-e6889dde1fcd",
+#      "name": "VISION-BANK",
+#      "bank_tz": "America/Los_Angeles",
+#      "deposits": [
+#        {
+#          "uuid": "92ba5b93-f864-4b4e-8374-79873c5e0502",
+#          "account": "1234",
+#          "account_type": "BrokerageCertificateOfDeposit",
+#          "apy": "5",
+#          "years": "7",
+#          "outcome": {
+#            "delta": {
+#              "period": "6",
+#              "period_unit": "Month",
+#              "growth": "270.99"
+#            },
+#            "maturity": {
+#              "amount": "10990",
+#              "interest": "3846.50",
+#              "total": "14836.50"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2023-02-16",
+#            "maturity_date_in_bank_tz": "2030-02-14",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "5d1b10d2-f2c5-4356-934f-0e8308c34897",
+#          "account": "9898",
+#          "account_type": "CertificateOfDeposit",
+#          "apy": "2.22",
+#          "years": "1",
+#          "outcome": {
+#            "delta": {
+#              "period": "6",
+#              "period_unit": "Month",
+#              "growth": "60.21"
+#            },
+#            "maturity": {
+#              "amount": "5500",
+#              "interest": "122.10",
+#              "total": "5622.10"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2020-02-16",
+#            "maturity_date_in_bank_tz": "2021-02-15",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "c46ed3cc-13ba-4b32-b1ae-3e1ac15b8f0d",
+#          "account": "3833",
+#          "account_type": "Savings",
+#          "apy": "3.75",
+#          "years": "20",
+#          "outcome": {
+#            "delta": {
+#              "period": "6",
+#              "period_unit": "Month",
+#              "growth": "268.32"
+#            },
+#            "maturity": {
+#              "amount": "10000.50",
+#              "interest": "10882.06",
+#              "total": "20882.56"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2024-02-16",
+#            "maturity_date_in_bank_tz": "2044-02-11",
+#            "errors": []
+#          }
+#        }
+#      ],
+#      "outcome": {
+#        "delta": {
+#          "period": "6",
+#          "period_unit": "Month",
+#          "growth": "599.52"
+#        },
+#        "maturity": {
+#          "amount": "26490.50",
+#          "interest": "14850.66",
+#          "total": "41341.16"
+#        },
+#        "errors": []
+#      }
+#    },
+#    {
+#      "uuid": "d9628443-6e8d-462e-8ce8-4401d02a41f8",
+#      "name": "PEACEMAKER",
+#      "bank_tz": "America/New_York",
+#      "deposits": [
+#        {
+#          "uuid": "c3e19c10-fd3a-4db1-b221-da8bcb03a683",
+#          "account": "1234",
+#          "account_type": "BrokerageCertificateOfDeposit",
+#          "apy": "2.4",
+#          "years": "7",
+#          "outcome": {
+#            "delta": {
+#              "period": "6",
+#              "period_unit": "Month",
+#              "growth": "130.07"
+#            },
+#            "maturity": {
+#              "amount": "10990",
+#              "interest": "1846.32",
+#              "total": "12836.32"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2024-02-16",
+#            "maturity_date_in_bank_tz": "2031-02-14",
+#            "errors": []
+#          }
+#        }
+#      ],
+#      "outcome": {
+#        "delta": {
+#          "period": "6",
+#          "period_unit": "Month",
+#          "growth": "130.07"
+#        },
+#        "maturity": {
+#          "amount": "10990",
+#          "interest": "1846.32",
+#          "total": "12836.32"
+#        },
+#        "errors": []
+#      }
+#    },
+#    {
+#      "uuid": "a95f65ca-ef41-436b-8705-4071e2e183a1",
+#      "name": "MOUNTAIN",
+#      "bank_tz": "America/Chicago",
+#      "deposits": [
+#        {
+#          "uuid": "44c83662-56ce-4516-9661-e1ff46c4d4d1",
+#          "account": "1234",
+#          "account_type": "Checking",
+#          "apy": "0.01",
+#          "years": "1",
+#          "outcome": {
+#            "delta": {
+#              "period": "6",
+#              "period_unit": "Month",
+#              "growth": "0.00"
+#            },
+#            "maturity": {
+#              "amount": "100",
+#              "interest": "0.01",
+#              "total": "100.01"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2019-01-01",
+#            "maturity_date_in_bank_tz": "2020-01-01",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "08638d63-97e0-404d-91a5-bc1cd40b53a0",
+#          "account": "1256",
+#          "account_type": "CertificateOfDeposit",
+#          "apy": "5.40",
+#          "years": "2",
+#          "outcome": {
+#            "delta": {
+#              "period": "6",
+#              "period_unit": "Month",
+#              "growth": "1367.46"
+#            },
+#            "maturity": {
+#              "amount": "50000",
+#              "interest": "5545.80",
+#              "total": "55545.80"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2018-04-07",
+#            "maturity_date_in_bank_tz": "2020-04-06",
+#            "errors": []
+#          }
+#        },
+#        {
+#          "uuid": "bb3cdd45-2917-4d8b-ba75-2ffded5e4f52",
+#          "account": "1111",
+#          "account_type": "CertificateOfDeposit",
+#          "apy": "1.01",
+#          "years": "10",
+#          "outcome": {
+#            "delta": {
+#              "period": "6",
+#              "period_unit": "Month",
+#              "growth": "109.48"
+#            },
+#            "maturity": {
+#              "amount": "21000",
+#              "interest": "2220.04",
+#              "total": "23220.04"
+#            },
+#            "errors": []
+#          },
+#          "outcome_with_dates": {
+#            "start_date_in_bank_tz": "2018-08-14",
+#            "maturity_date_in_bank_tz": "2028-08-11",
+#            "errors": []
+#          }
+#        }
+#      ],
+#      "outcome": {
+#        "delta": {
+#          "period": "6",
+#          "period_unit": "Month",
+#          "growth": "1476.94"
+#        },
+#        "maturity": {
+#          "amount": "71100",
+#          "interest": "7765.85",
+#          "total": "78865.85"
+#        },
+#        "errors": []
+#      }
+#    }
+#  ],
+#  "outcome": {
+#    "delta": {
+#      "period": "6",
+#      "period_unit": "Month",
+#      "growth": "2206.53"
+#    },
+#    "maturity": {
+#      "amount": "108580.50",
+#      "interest": "24462.83",
+#      "total": "133043.33"
+#    },
+#    "errors": []
+#  },
+#  "created_at": "2024-07-31 18:00:49.388889 UTC"
+#}

@@ -1,0 +1,10 @@
+version = 0.1
+[dev.deploy.parameters]
+stack_name = "drive-deposits-dynamodb-queries"
+resolve_s3 = true
+s3_prefix = "drive-deposits-dynamodb-queries"
+region = "us-west-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Environment=\"dev\" UseLocalstack=\"false\""
+image_repositories = []

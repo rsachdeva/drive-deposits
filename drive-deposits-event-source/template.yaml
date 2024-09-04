@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: stack pattern drive-deposits-event-source; CloudFormation template for EventBridge Bus creation for sending events from gRPC calculations that will be consumed by Lambda functions
+
+Resources:
+  DriveDepositsEventBus:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: "DriveDepositsEventBus"

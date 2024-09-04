@@ -1,0 +1,82 @@
+{
+  "new_delta": {
+    "period": "1",
+    "period_unit": "Moth"
+  },
+  "new_banks": [
+    {
+      "name": "MOUNTAIN",
+      "bank_tz": "America/Chicago",
+      "new_deposits": [
+        {
+          "account": "1234",
+          "account_type": "Checking",
+          "apy": "0",
+          "years": "1",
+          "amount": "100",
+          "start_date_in_bank_tz": "2019-01-01"
+        },
+        {
+          "account": "1256",
+          "account_type": "CertificateOfDeposit",
+          "apy": "5.40",
+          "years": "2",
+          "amount": "50000",
+          "start_date_in_bank_tz": "2018-04-07"
+        },
+        {
+          "account": "1111",
+          "account_type": "CertificateOfDeposit",
+          "apy": "1.01",
+          "years": "10",
+          "amount": "21000",
+          "start_date_in_bank_tz": "2018-08-14"
+        }
+      ]
+    },
+    {
+      "name": "PEACEMAKER",
+      "bank_tz": "America/New_York",
+      "new_deposits": [
+        {
+          "account": "1234",
+          "account_type": "BrokerageCertificateOfDeposit",
+          "apy": "2.4",
+          "years": "7",
+          "amount": "10990",
+          "start_date_in_bank_tz": "2024-02-16"
+        }
+      ]
+    },
+    {
+      "name": "VISION-BANK",
+      "bank_tz": "America/LosAngeles",
+      "new_deposits": [
+        {
+          "account": "1234",
+          "account_type": "BrokerageCertificateOfDeposit",
+          "apy": "5",
+          "years": "7",
+          "amount": "10990",
+          "start_date_in_bank_tz": "2023-02-16"
+        },
+        {
+          "account": "9898",
+          "account_type": "CertificateOfDeposit",
+          "apy": "2.22",
+          "years": "1",
+          "amount": "5500",
+          "start_date_in_bank_tz": "2020-02-16"
+        },
+        {
+          "account": "3833",
+          "account_type": "Savings",
+          "apy": "3.75",
+          "years": "20",
+          "amount": "10000.50",
+          "start_date_in_bank_tz": "2024-02-16"
+        }
+      ]
+    }
+  ]
+}

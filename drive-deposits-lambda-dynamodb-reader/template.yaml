@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: stack pattern drive-deposits-dynamodb-queries; CloudFormation template for Lambda DynamoDB Reader for queries based on data persisted at the write level in drive-deposits-logs-lambda-target
+
+Parameters:
+  Environment:
+    Type: String
+    Description: "The environment name (e.g., dev, staging, production)"
+
+  UseLocalstack:
+    Type: String
+    Default: "false"
+    Description: "Flag to determine if Localstack should be used"
+
+  DriveDepositsTableName:
+    Type: String
+    Description: "The name of the DynamoDB table for Drive Deposits"
+
+Resources:
+  DriveDepositsHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 100  # Maximum number of concurrent requests for all routes
+        ThrottlingRateLimit: 100   # Maximum number of requests per second for all routes
+
+  DriveDepositsByLevelLambdaReaderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "drive_deposits_by_level_lambda_reader_${Environment}"
+      CodeUri: .
+      Handler: bootstrap
+      Runtime: provided.al2023
+      Architectures:
+        - arm64
+      Timeout: 30
+      Environment:
+        Variables:
+          RUST_LOG: debug
+          AWS_LAMBDA_HTTP_IGNORE_STAGE_IN_PATH: 'true'
+          USE_LOCALSTACK: !Ref UseLocalstack
+          DRIVE_DEPOSITS_TABLE_NAME:
+            # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html
+            Fn::ImportValue:
+              !Sub "${DriveDepositsTableName}"
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName:
+              Fn::ImportValue:
+                !Sub "${DriveDepositsTableName}"
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            ApiId: !Ref DriveDepositsHttpApi
+    Metadata:
+      BuildMethod: rust-cargolambda
+      BuildProperties:
+        Binary: by_level_lambda_reader
+        BuildArgs: --release
+        Cache: true
+
+Outputs:
+  DriveDepositsByLevelLambdaReaderApiGatewayUrl:
+    Value: !Sub 'https://${DriveDepositsHttpApi}.execute-api.${AWS::Region}.amazonaws.com/'
+    Description: URL for the Axum Banks Level Lambda Reader API function endpoint

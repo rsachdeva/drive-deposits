@@ -1,0 +1,58 @@
+{
+  "new_delta": {
+    "period": "1",
+    "period_unit": "Month"
+  },
+  "new_banks": [
+    {
+      "name": "MOUNTAIN-LESSER",
+      "bank_tz": "America/Chicago",
+      "new_deposits": [
+        {
+          "account": "1111L",
+          "account_type": "CertificateOfDeposit",
+          "apy": "1.01",
+          "years": "10",
+          "amount": "21000",
+          "start_date_in_bank_tz": "2018-08-14"
+        }
+      ]
+    },
+    {
+      "name": "PEACEMAKER-LESSER",
+      "bank_tz": "America/New_York",
+      "new_deposits": [
+        {
+          "account": "1234L",
+          "account_type": "BrokerageCertificateOfDeposit",
+          "apy": "2.4",
+          "years": "2",
+          "amount": "5990",
+          "start_date_in_bank_tz": "2024-02-16"
+        }
+      ]
+    },
+    {
+      "name": "VISION-BANK-LESSER",
+      "bank_tz": "America/Los_Angeles",
+      "new_deposits": [
+        {
+          "account": "1235L",
+          "account_type": "BrokerageCertificateOfDeposit",
+          "apy": "3.34",
+          "years": "7",
+          "amount": "4990",
+          "start_date_in_bank_tz": "2023-02-16"
+        },
+        {
+          "account": "3833L",
+          "account_type": "Savings",
+          "apy": "2.75",
+          "years": "20",
+          "amount": "7000.50",
+          "start_date_in_bank_tz": "2024-02-16"
+        }
+      ]
+    }
+  ]
+}

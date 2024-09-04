@@ -1,0 +1,9 @@
+// Re-exporting drive_deposits_rest_types::rest_types
+pub use drive_deposits_rest_types::rest_types::Bank;
+pub use drive_deposits_rest_types::rest_types::CalculatePortfolioResponse;
+pub use drive_deposits_rest_types::rest_types::Delta;
+pub use drive_deposits_rest_types::rest_types::Deposit;
+pub use drive_deposits_rest_types::rest_types::Maturity;
+pub use drive_deposits_rest_types::rest_types::Outcome;
+pub use drive_deposits_rest_types::rest_types::OutcomeWithDates;
+pub use drive_deposits_rest_types::rest_types::ProcessingError;

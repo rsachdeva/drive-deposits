@@ -1,0 +1,177 @@
+{
+  "uuid": "3ea3c292-3d91-4b85-b9b2-c95d241204d5",
+  "banks": [
+    {
+      "uuid": "cbf46f68-b82c-4b67-b870-ab378012b9f4",
+      "name": "PEACEMAKER",
+      "bank_tz": "America/New_York",
+      "deposits": [
+        {
+          "uuid": "dce6639f-a96c-47dd-b496-6e1f404aadb9",
+          "account": "1234",
+          "account_type": "4",
+          "apy": "2.4",
+          "years": "7",
+          "outcome": {
+            "delta": null,
+            "maturity": null,
+            "errors": []
+          },
+          "outcome_with_dates": {
+            "start_date_in_bank_tz": "2024-02-16",
+            "maturity_date_in_bank_tz": "2031-02-14",
+            "errors": []
+          }
+        }
+      ],
+      "outcome": {
+        "delta": null,
+        "maturity": null,
+        "errors": [
+          {
+            "uuid": "e80f60a4-72e9-4593-8eea-46fadf4b9b3e",
+            "message": "Error accumulating deposits: MissingMaturity"
+          }
+        ]
+      }
+    },
+    {
+      "uuid": "c0d19534-b8fb-419a-9d9f-ccb3ed2b42fc",
+      "name": "MOUNTAIN",
+      "bank_tz": "America/Chicago",
+      "deposits": [
+        {
+          "uuid": "02fc04d9-ec53-4c9f-b5cc-d675d8a6c35a",
+          "account": "1234",
+          "account_type": "1",
+          "apy": "0",
+          "years": "1",
+          "outcome": {
+            "delta": null,
+            "maturity": null,
+            "errors": []
+          },
+          "outcome_with_dates": {
+            "start_date_in_bank_tz": "2019-01-01",
+            "maturity_date_in_bank_tz": "2020-01-01",
+            "errors": []
+          }
+        },
+        {
+          "uuid": "6d6b699b-334d-4df1-8af8-55803a0603eb",
+          "account": "1256",
+          "account_type": "3",
+          "apy": "5.40",
+          "years": "2",
+          "outcome": {
+            "delta": null,
+            "maturity": null,
+            "errors": []
+          },
+          "outcome_with_dates": {
+            "start_date_in_bank_tz": "2018-04-07",
+            "maturity_date_in_bank_tz": "2020-04-06",
+            "errors": []
+          }
+        },
+        {
+          "uuid": "c306e9d9-988a-47b7-a40a-5228d6fda00f",
+          "account": "1111",
+          "account_type": "3",
+          "apy": "1.01",
+          "years": "10",
+          "outcome": {
+            "delta": null,
+            "maturity": null,
+            "errors": []
+          },
+          "outcome_with_dates": {
+            "start_date_in_bank_tz": "2018-08-14",
+            "maturity_date_in_bank_tz": "2028-08-11",
+            "errors": []
+          }
+        }
+      ],
+      "outcome": {
+        "delta": null,
+        "maturity": null,
+        "errors": [
+          {
+            "uuid": "671e0b11-edec-4033-bc7d-fce304a807b4",
+            "message": "Error accumulating deposits: MissingMaturity"
+          }
+        ]
+      }
+    },
+    {
+      "uuid": "d23edc7c-a4a6-427f-a8f4-b6366e43c08f",
+      "name": "VISION-BANK",
+      "bank_tz": "America/Los_Angeles",
+      "deposits": [
+        {
+          "uuid": "1d54e80f-8773-4c8e-85d2-1750bc14dc3f",
+          "account": "1234",
+          "account_type": "4",
+          "apy": "5",
+          "years": "7",
+          "outcome": {
+            "delta": null,
+            "maturity": null,
+            "errors": []
+          },
+          "outcome_with_dates": {
+            "start_date_in_bank_tz": "2023-02-16",
+            "maturity_date_in_bank_tz": "2030-02-14",
+            "errors": []
+          }
+        },
+        {
+          "uuid": "0f665c10-352e-4b0e-a55c-2fccf2b07f5e",
+          "account": "9898",
+          "account_type": "3",
+          "apy": "2.22",
+          "years": "1",
+          "outcome": {
+            "delta": null,
+            "maturity": null,
+            "errors": []
+          },
+          "outcome_with_dates": {
+            "start_date_in_bank_tz": "2020-02-16",
+            "maturity_date_in_bank_tz": "2021-02-15",
+            "errors": []
+          }
+        },
+        {
+          "uuid": "aa06c0e1-2f55-4c0a-a861-c727a5477cc6",
+          "account": "3833",
+          "account_type": "2",
+          "apy": "3.75",
+          "years": "20",
+          "outcome": {
+            "delta": null,
+            "maturity": null,
+            "errors": []
+          },
+          "outcome_with_dates": {
+            "start_date_in_bank_tz": "2024-02-16",
+            "maturity_date_in_bank_tz": "2044-02-11",
+            "errors": []
+          }
+        }
+      ],
+      "outcome": {
+        "delta": null,
+        "maturity": null,
+        "errors": [
+          {
+            "uuid": "6dc2212b-5199-46be-a916-56f519730f97",
+            "message": "Error accumulating deposits: MissingMaturity"
+          }
+        ]
+      }
+    }
+  ],
+  "outcome": null,
+  "created_at": "2024-07-12 23:24:17.253955 UTC"
+}

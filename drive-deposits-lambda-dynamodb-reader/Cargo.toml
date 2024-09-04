@@ -1,0 +1,37 @@
+[package]
+name = "drive-deposits-lambda-dynamodb-reader"
+version = "0.10.0"
+edition = "2021"
+
+# Starting in Rust 1.62 you can use `cargo add` to add dependencies 
+# to your project.
+#
+# If you're using an older Rust version,
+# download cargo-edit(https://github.com/killercup/cargo-edit#installation) 
+# to install the `add` subcommand.
+#
+# Running `cargo add DEPENDENCY_NAME` will
+# add the latest version of a dependency to the list,
+# and it will keep the alphabetic ordering for you.
+
+[dependencies]
+aws-config = { version = "1.5.4", features = ["behavior-version-latest"] }
+aws-sdk-dynamodb = "1.39.1"
+lambda_http = "0.13.0"
+thiserror = "1.0.63"
+tracing = "0.1.40"
+axum = { version = "0.7.5", features = ["macros"] }
+serde = { version = "1.0.207", features = ["derive"] }
+serde_json = "1.0.124"
+tokio = { version = "1", features = ["macros"] }
+# workspace member depdenencies
+drive-deposits-lambda-db-types = { path = "../drive-deposits-lambda-db-types" }
+
+# uuid added in different style
+[dependencies.uuid]
+version = "1.10.0"
+features = ["v4"]
+
+[[bin]]
+name = "by_level_lambda_reader"
+path = "src/bin/by_level_lambda_reader.rs"

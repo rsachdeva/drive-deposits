@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+// ~/drinnovations/mywork_jmd/rust_1_parvatimata_shivji_learnings_jmd/rust_courses_jmd/rust_tokio_ecosystem_video_text__/tonic_video_text/tonic-deposits-grpc-only-jmd git:[v0.3]
+//buf lint
+// after doing brew install bufbuild/buf/buf
+// buf:lint:ignore PACKAGE_DIRECTORY_MATCH
+package drivedepositsproto.v1;
+
+import "google/protobuf/wrappers.proto";
+
+
+// The drive deposits service definition.
+service DriveDepositsService {
+  // calculated delta interest for each bank and for all banks as per delta period defined in BankRequest
+  rpc CalculatePortfolio(CalculatePortfolioRequest) returns (CalculatePortfolioResponse) {}
+}
+
+// Request sections
+message CalculatePortfolioRequest {
+  repeated NewBank new_banks = 1;
+  NewDelta new_delta = 2;
+}
+
+message NewDelta {
+  string period = 1;
+  PeriodUnit period_unit = 2;
+}
+
+enum PeriodUnit {
+  PERIOD_UNIT_UNSPECIFIED = 0;
+  DAY = 1;
+  WEEK = 2;
+  MONTH = 3;
+  YEAR = 4;
+}
+
+message NewBank {
+  string name = 1;
+  string bank_tz = 2;
+  repeated NewDeposit new_deposits = 3;
+}
+
+message NewDeposit {
+  string account = 1;
+  AccountType account_type = 2;
+  string apy = 3;
+  string years = 4;
+  string amount = 5;
+  string start_date_in_bank_tz = 6;
+}
+
+enum AccountType {
+  ACCOUNT_TYPE_UNSPECIFIED = 0;
+  CHECKING = 1;
+  SAVINGS = 2;
+  CERTIFICATE_OF_DEPOSIT = 3;
+  BROKERAGE_CERTIFICATE_OF_DEPOSIT = 4;
+}
+
+// Response sections
+
+message CalculatePortfolioResponse {
+  string uuid = 1;
+  repeated Bank banks = 2;
+  Outcome outcome = 3;
+  string created_at = 4;
+}
+
+message Delta {
+  string period = 1;
+  PeriodUnit period_unit = 2;
+  string growth = 3;
+}
+
+message Maturity {
+  string amount = 1;
+  string interest = 2;
+  string total = 3;
+}
+
+message Bank {
+  string uuid = 1;
+  string name = 2;
+  string bank_tz = 3;
+  repeated Deposit deposits = 4;
+  Outcome outcome = 5;
+}
+
+message Deposit {
+  string uuid = 1;
+  string account = 2;
+  AccountType account_type = 3;
+  string apy = 4;
+  string years = 5;
+  Outcome outcome = 6;
+  OutcomeWithDates outcome_with_dates = 7;
+}
+
+message Outcome {
+  Delta delta = 1;
+  Maturity maturity = 2;
+  repeated ProcessingError errors = 3;
+}
+
+message OutcomeWithDates {
+  string start_date_in_bank_tz = 1;
+  google.protobuf.StringValue maturity_date_in_bank_tz = 2;
+  repeated ProcessingError errors = 3;
+}
+
+message ProcessingError {
+  string uuid = 1;
+  string message = 2;
+}

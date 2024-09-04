@@ -1,0 +1,80 @@
+{
+  "new_delta": {
+    "period": "1",
+    "period_unit": "Month"
+  },
+  "new_banks": [
+    {
+      "name": "MOUNTAIN-GREATER",
+      "bank_tz": "America/Chicago",
+      "new_deposits": [
+        {
+          "account": "9111G",
+          "account_type": "CertificateOfDeposit",
+          "apy": "3.50",
+          "years": "10",
+          "amount": "21000",
+          "start_date_in_bank_tz": "2019-08-14"
+        }
+      ]
+    },
+    {
+      "name": "CASHBACKJMD-GREATER",
+      "bank_tz": "America/Los_Angeles",
+      "new_deposits": [
+        {
+          "account": "1111G",
+          "account_type": "CertificateOfDeposit",
+          "apy": "3.50",
+          "years": "5",
+          "amount": "410000",
+          "start_date_in_bank_tz": "2019-08-14"
+        },
+        {
+          "account": "1112G",
+          "account_type": "CertificateOfDeposit",
+          "apy": "2.50",
+          "years": "5",
+          "amount": "230000",
+          "start_date_in_bank_tz": "2019-08-14"
+        }
+      ]
+    },
+    {
+      "name": "PEACEMAKER-GREATER",
+      "bank_tz": "America/New_York",
+      "new_deposits": [
+        {
+          "account": "1234G",
+          "account_type": "BrokerageCertificateOfDeposit",
+          "apy": "4.25",
+          "years": "10",
+          "amount": "79990",
+          "start_date_in_bank_tz": "2022-02-16"
+        }
+      ]
+    },
+    {
+      "name": "VISION-BANK-GREATER",
+      "bank_tz": "America/Los_Angeles",
+      "new_deposits": [
+        {
+          "account": "1235G",
+          "account_type": "BrokerageCertificateOfDeposit",
+          "apy": "3.34",
+          "years": "7",
+          "amount": "74990",
+          "start_date_in_bank_tz": "2023-02-16"
+        },
+        {
+          "account": "3833G",
+          "account_type": "Savings",
+          "apy": "2.75",
+          "years": "20",
+          "amount": "49000.50",
+          "start_date_in_bank_tz": "2024-02-16"
+        }
+      ]
+    }
+  ]
+}
