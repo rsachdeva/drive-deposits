@@ -1,11 +1,13 @@
-## DriveDeposits: Building a Robust Financial System with a Scalable, Synchronous and Asynchronous Rust Backend
+## DriveDeposits: A Robust Financial System with Delta Growth Analysis, Powered by a Scalable Rust Backend (Synchronous & Asynchronous)
+
+<img src="DriveDeposits-Rust.png" alt="DriveDeposits" width="256" height="256" style="border-radius: 10%; vertical-align: middle;">
 
 ## Table of Contents
 
+- [Domain Driven Terminology](#domain-driven-terminology)
 - [DriveDeposits: Architectural Pillars](#drivedeposits-architectural-pillars)
 - [Synchronous Components](#synchronous-components)
 - [Asynchronous Components](#asynchronous-components)
-- [Domain Driven Terminology](#domain-driven-terminology)
 - [Bridging Synchronous and Asynchronous Components In DriveDeposits](#bridging-synchronous-and-asynchronous-components-in-drivedeposits)
 - [AWS EventBridge, EventBus and Targets include Cloudwatch Log group and Lambda Deployment](#aws-eventbridge-eventbus-and-targets-include-cloudwatch-log-group-and-lambda-deployment)
 - [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
@@ -15,6 +17,127 @@
 - [Clean](#clean)
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
 - [Member crates in workspace](#member-crates-in-workspace)
+
+### Domain Driven Terminology:
+
+The following terms are consistently used throughout the DriveDeposits project, forming the core vocabulary of our
+domain-specific language in both design and development:
+
+* **Portfolio:** A collection of investments, such as stocks, bonds, and mutual funds, owned by an individual or an
+  organization.
+* **Bank:** A financial institution that accepts deposits for investment. In this context, "bank" refers to any
+  financial institution.
+* **Deposit:** A sum of money placed in a bank account or other investment vehicle.
+* **Levels (Portfolio, Bank, Deposit):**  DriveDeposits allows query of data at different levels - portfolios, banks,
+  or deposits - to make informed financial decisions.
+* **Delta:**  Represents the growth over a user-specified period, as specified
+  within the Portfolio
+  Request. It
+  measures investment
+  performance at
+  various levels (portfolios, banks, deposits). See
+  this [PortfolioRequest](drive-deposits-rest-gateway-server/data/rest_request_valid.json) example:
+
+  ```json
+  {
+      "new_delta": {
+        "period": "1",
+        "period_unit": "Month"
+      }
+  }
+  ```
+
+    * **Delta Growth:** The increase in value calculated in Portfolio Response. See JSON Path as
+      outcome.delta.growth.
+      This fluctuation is calculated at the portfolio, bank, and deposit levels.
+      See [PortfolioResponse](drive-deposits-rest-gateway-server/data/rest_response_for_valid.json) at the Deposit
+      Level for
+      example:
+      ```json
+      {
+        "uuid": "eb8ea161-c461-4b1a-8f7c-7b845ba5bcbc",
+        "account": "1235N",
+        "account_type": "BrokerageCertificateOfDeposit",
+        "apy": "2.4",
+        "years": "7",
+        "outcome": {
+          "delta": {
+            "period": "1",
+            "period_unit": "Month",
+            "growth": "21.68"
+          },
+          "maturity": {
+            "amount": "10990",
+            "interest": "1846.32",
+            "total": "12836.32"
+          },
+          "errors": []
+        },
+        "outcome_with_dates": {
+          "start_date_in_bank_tz": "2024-02-16",
+          "maturity_date_in_bank_tz": "2031-02-14",
+          "errors": []
+        }
+      } 
+      ```
+      And at the Bank Level:
+      ```json
+      {
+        "outcome": {
+          "delta": {
+            "period": "1",
+            "period_unit": "Month",
+            "growth": "246.16"
+          },
+          "maturity": {
+            "amount": "71100",
+            "interest": "7765.94",
+            "total": "78865.94"
+          },
+          "errors": []
+        }
+      }
+      ```
+      And at the Portfolio Level:
+      ```json
+      {
+        "outcome": {
+          "delta": {
+          "period": "1",
+          "period_unit": "Month",
+          "growth": "367.76"
+          },
+          "maturity": {
+          "amount": "108580.50",
+          "interest": "24462.92",
+          "total": "133043.42"
+          },
+          "errors": []
+          }
+      }
+      ```
+
+
+* **Sorting Capabilities with Top K Based on Delta Growth:** DriveDeposits allows sorting based on delta growth,
+  retrieving the top 'k' portfolios in ascending or descending order. For example:
+
+```http
+{{drive_deposits_lambda_reader}}/by-level-for-portfolios/delta-growth?&order=desc&top_k=3
+```
+
+```http
+{{drive_deposits_lambda_reader}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-banks/delta-growth?order=asc&top_k=9
+```
+
+* **Maturity date:** The date when a deposit or investment reaches its full value or the end of its term.
+* **Sorting capabilities with top_k based on maturity date:** DriveDeposits allows sorting by maturity date,
+  retrieving the top 'k' portfolios (where 'k' is a number defined by the user in the query) in ascending or descending
+  order. For
+  example:
+
+```http
+{{drive_deposits_lambda_reader}}/by-level-for-deposits/maturity-date?&order=desc&top_k=3
+```
 
 ### DriveDeposits: Architectural Pillars
 
@@ -48,6 +171,8 @@ Documentation for Drive Deposits is work in progress. More details will be added
 
 ### Synchronous Components
 
+- AWS Serverless Lambda Reader (uses ***Axum*** for Routing)
+    - AWS API Gateway
 - gRPC (using ***Tonic***)
 - REST (using ***Axum***)
 
@@ -55,54 +180,9 @@ Documentation for Drive Deposits is work in progress. More details will be added
 
 Using the ***AWS SDK for Rust***
 
-- AWS Serverless Lambda Reader (uses ***Axum*** for Routing)
 - AWS Serverless Lambda Writer
 - DynamoDB
 - EventBridge
-
-### Domain Driven Terminology:
-
-* **Portfolio:** A collection of investments, such as stocks, bonds, and mutual funds, owned by an individual or an
-  organization.
-* **Bank:** A financial institution that accepts deposits for investment. In this context, "bank" refers to any
-  financial institution.
-* **Deposit:** A sum of money placed in a bank account or other investment vehicle.
-* **Levels (Portfolio, Bank, Deposit):**  DriveDeposits allows query of data at different levels - portfolios, banks,
-  or deposits - to make informed financial decisions.
-* **Delta:**  Represents the growth or change in value over a specific period. It measures investment performance at
-  various levels (portfolios, banks, deposits). See
-  this [CalculationRequest](drive-deposits-rest-gateway-server/data/rest_request_valid.json) example:
-
-  ```json
-  {
-      "new_delta": {
-        "period": "1",
-        "period_unit": "Month"
-      }
-  }
-
-* **Delta Growth:** The fluctuation in value over a user-specified period, as specified within the Calculation Request.
-  This fluctuation is calculated at the portfolio, bank, and deposit levels.
-* **Sorting Capabilities with Top K Based on Delta Growth:** DriveDeposits allows sorting based on delta growth,
-  retrieving the top 'k' portfolios in ascending or descending order. For example:
-
-```http
-{{drive_deposits_lambda_reader}}/by-level-for-portfolios/delta-growth?&order=desc&top_k=3
-```
-
-```http
-{{drive_deposits_lambda_reader}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-banks/delta-growth?order=asc&top_k=9
-```
-
-* **Maturity date:** The date when a deposit or investment reaches its full value or the end of its term.
-* **Sorting capabilities with top_k based on maturity date:** DriveDeposits allows sorting by maturity date,
-  retrieving the top 'k' portfolios (where 'k' is a number defined by the user in the query) in ascending or descending
-  order. For
-  example:
-
-```http
-{{drive_deposits_lambda_reader}}/by-level-for-deposits/maturity-date?&order=desc&top_k=3
-```
 
 ### Bridging Synchronous and Asynchronous Components In DriveDeposits
 

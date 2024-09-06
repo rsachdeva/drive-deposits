@@ -1,13 +1,58 @@
 {
-  "uuid": "0c64fb0f-5ab9-4f2c-9317-4fa403297b7d",
+  "uuid": "93910106-f45c-4c03-81ce-c4a2c8aea439",
   "banks": [
     {
-      "uuid": "809c688e-d420-41ab-a3e6-2d8e4698a700",
+      "uuid": "0acbb9f2-824d-4b0e-81ee-7eda62462bad",
+      "name": "PEACEMAKER",
+      "bank_tz": "America/New_York",
+      "deposits": [
+        {
+          "uuid": "eb8ea161-c461-4b1a-8f7c-7b845ba5bcbc",
+          "account": "1235N",
+          "account_type": "BrokerageCertificateOfDeposit",
+          "apy": "2.4",
+          "years": "7",
+          "outcome": {
+            "delta": {
+              "period": "1",
+              "period_unit": "Month",
+              "growth": "21.68"
+            },
+            "maturity": {
+              "amount": "10990",
+              "interest": "1846.32",
+              "total": "12836.32"
+            },
+            "errors": []
+          },
+          "outcome_with_dates": {
+            "start_date_in_bank_tz": "2024-02-16",
+            "maturity_date_in_bank_tz": "2031-02-14",
+            "errors": []
+          }
+        }
+      ],
+      "outcome": {
+        "delta": {
+          "period": "1",
+          "period_unit": "Month",
+          "growth": "21.68"
+        },
+        "maturity": {
+          "amount": "10990",
+          "interest": "1846.32",
+          "total": "12836.32"
+        },
+        "errors": []
+      }
+    },
+    {
+      "uuid": "d1371108-836f-47e2-9122-53319ce55281",
       "name": "VISION-BANK",
       "bank_tz": "America/Los_Angeles",
       "deposits": [
         {
-          "uuid": "4768e2e2-da98-4037-992f-709128a9b1c2",
+          "uuid": "21fe4998-043c-4cff-9624-7a2ea2010542",
           "account": "1235N",
           "account_type": "BrokerageCertificateOfDeposit",
           "apy": "5",
@@ -32,7 +77,7 @@
           }
         },
         {
-          "uuid": "2bb893a4-8831-451f-ba22-14cf81d1e40b",
+          "uuid": "5eda5933-ca61-4ce9-a425-226a21e62b7a",
           "account": "9898N",
           "account_type": "CertificateOfDeposit",
           "apy": "2.22",
@@ -57,7 +102,7 @@
           }
         },
         {
-          "uuid": "b2f49c84-db51-43b7-bc37-11735f5c23b0",
+          "uuid": "ce86b43a-519c-486d-8572-091d7cc5413c",
           "account": "3833N",
           "account_type": "Savings",
           "apy": "3.75",
@@ -97,12 +142,12 @@
       }
     },
     {
-      "uuid": "3c3a9c21-de54-45bc-8712-817c4b52759f",
+      "uuid": "f7472297-a949-4124-8253-007d7338c2dd",
       "name": "MOUNTAIN",
       "bank_tz": "America/Chicago",
       "deposits": [
         {
-          "uuid": "28da837b-3eaa-4745-be70-dc031a682ad6",
+          "uuid": "3c09a679-382f-48b4-abdc-dd3bc74bee77",
           "account": "1234N",
           "account_type": "Checking",
           "apy": "0.01",
@@ -127,7 +172,7 @@
           }
         },
         {
-          "uuid": "2e29fb9d-b84a-4821-92bd-4fcd4fd71a72",
+          "uuid": "8de0825c-4565-4ab6-a5a8-84a38608a9c1",
           "account": "1256N",
           "account_type": "CertificateOfDeposit",
           "apy": "5.40",
@@ -152,7 +197,7 @@
           }
         },
         {
-          "uuid": "54cfe116-8f2a-4aab-8e8b-0a71a6cad272",
+          "uuid": "ac67535a-7acf-4f16-9c9a-cdf933552c3c",
           "account": "1111N",
           "account_type": "CertificateOfDeposit",
           "apy": "1.01",
@@ -190,51 +235,6 @@
         },
         "errors": []
       }
-    },
-    {
-      "uuid": "a474e924-ff79-4fe9-a2e8-b2b1880e6fe6",
-      "name": "PEACEMAKER",
-      "bank_tz": "America/New_York",
-      "deposits": [
-        {
-          "uuid": "f28efc5c-28b4-4334-819d-5967cfa00e18",
-          "account": "1234N",
-          "account_type": "BrokerageCertificateOfDeposit",
-          "apy": "2.4",
-          "years": "7",
-          "outcome": {
-            "delta": {
-              "period": "1",
-              "period_unit": "Month",
-              "growth": "21.68"
-            },
-            "maturity": {
-              "amount": "10990",
-              "interest": "1846.32",
-              "total": "12836.32"
-            },
-            "errors": []
-          },
-          "outcome_with_dates": {
-            "start_date_in_bank_tz": "2024-02-16",
-            "maturity_date_in_bank_tz": "2031-02-14",
-            "errors": []
-          }
-        }
-      ],
-      "outcome": {
-        "delta": {
-          "period": "1",
-          "period_unit": "Month",
-          "growth": "21.68"
-        },
-        "maturity": {
-          "amount": "10990",
-          "interest": "1846.32",
-          "total": "12836.32"
-        },
-        "errors": []
-      }
     }
   ],
   "outcome": {
@@ -250,5 +250,5 @@
     },
     "errors": []
   },
-  "created_at": "2024-08-28T21:05:27.283882Z"
+  "created_at": "2024-09-05T15:48:34.811389Z"
 }
