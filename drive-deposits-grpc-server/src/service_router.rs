@@ -13,8 +13,8 @@ use crate::portfolio::DriveDepositsCalculator;
 pub async fn app() -> Result<Router, Box<dyn std::error::Error>> {
     let server_reflection = Builder::configure()
         .register_encoded_file_descriptor_set(FILE_DESCRIPTOR_SET)
-        .build()?;
-    info!("reflection built");
+        .build_v1alpha()?;
+    info!("reflection built using v1alpha since Postman gRPC still uses it as of tonic 0.12.2");
 
     let eb = create_eb().await?;
     let delta = DriveDepositsCalculator {

@@ -172,6 +172,6 @@ async fn send_event_to_event_bridge(
         put_events_output
     );
     // put events output is useful example :
-    // 2024-07-24T23:39:57.059295Z  INFO drive_deposits_check_cmd{json_request_file_path="examples/data/rest_request_valid.json"}:process_input{file_path="examples/data/rest_request_valid.json"}:calculate_by_period: drive_deposits_event_source::eb: PuEventsOutput is JMD: PutEventsOutput { failed_entry_count: 1, entries: Some([PutEventsResultEntry { event_id: None, error_code: Some("MalformedDetail"), error_message: Some("Detail is malformed.") }]), _request_id: Some("15fa9ddd-fd7f-4640-ba96-531715b211e5") }
+    // 2024-07-24T23:39:57.059295Z  INFO drive_deposits_check_cmd{json_request_file_path="examples/data/portfolio_request_valid.json"}:process_input{file_path="examples/data/portfolio_request_valid.json"}:calculate_by_period: drive_deposits_event_source::eb: PuEventsOutput is JMD: PutEventsOutput { failed_entry_count: 1, entries: Some([PutEventsResultEntry { event_id: None, error_code: Some("MalformedDetail"), error_message: Some("Detail is malformed.") }]), _request_id: Some("15fa9ddd-fd7f-4640-ba96-531715b211e5") }
     Ok(put_events_output)
 }

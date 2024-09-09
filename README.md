@@ -36,7 +36,7 @@ domain-specific language in both design and development:
   measures investment
   performance at
   various levels (portfolios, banks, deposits). See
-  this [PortfolioRequest](drive-deposits-rest-gateway-server/data/rest_request_valid.json) example:
+  this [PortfolioRequest](drive-deposits-rest-gateway-server/data/portfolio_request_valid.json) example:
 
   ```json
   {
@@ -50,7 +50,7 @@ domain-specific language in both design and development:
     * **Delta Growth:** The increase in value calculated in Portfolio Response. See JSON Path as
       outcome.delta.growth.
       This fluctuation is calculated at the portfolio, bank, and deposit levels.
-      See [PortfolioResponse](drive-deposits-rest-gateway-server/data/rest_response_for_valid.json) at the Deposit
+      See [PortfolioResponse](drive-deposits-rest-gateway-server/data/portfolio_response_for_valid.json) at the Deposit
       Level for
       example:
       ```json
@@ -119,24 +119,33 @@ domain-specific language in both design and development:
 
 
 * **Sorting Capabilities with Top K Based on Delta Growth:** DriveDeposits allows sorting based on delta growth,
-  retrieving the top 'k' portfolios in ascending or descending order. For example:
+  retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending
+  order. For example:
 
-```http
-{{drive_deposits_lambda_reader}}/by-level-for-portfolios/delta-growth?&order=desc&top_k=3
+```curl
+curl '{{aws_api_gateway_host}}/by-level-for-portfolios/delta-growth?order=asc&top_k=10' \
+    | jq
 ```
 
-```http
-{{drive_deposits_lambda_reader}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-banks/delta-growth?order=asc&top_k=9
+```curl
+curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-banks/delta-growth/?order=asc&top_k=10' \
+        | jq
+```
+
+```curl
+curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-deposits/maturity-date?order=asc&top_k=2' \
+        | jq
 ```
 
 * **Maturity date:** The date when a deposit or investment reaches its full value or the end of its term.
 * **Sorting capabilities with top_k based on maturity date:** DriveDeposits allows sorting by maturity date,
-  retrieving the top 'k' portfolios (where 'k' is a number defined by the user in the query) in ascending or descending
+  retrieving the top 'k' deposits (where 'k' is the number defined by the user in the query) in ascending or descending
   order. For
   example:
 
-```http
-{{drive_deposits_lambda_reader}}/by-level-for-deposits/maturity-date?&order=desc&top_k=3
+```curl
+curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-deposits/maturity-date?order=asc&top_k=2' \
+        | jq
 ```
 
 ### DriveDeposits: Architectural Pillars
@@ -171,18 +180,23 @@ Documentation for Drive Deposits is work in progress. More details will be added
 
 ### Synchronous Components
 
-- AWS Serverless Lambda Reader (uses ***Axum*** for Routing)
-    - AWS API Gateway
-- gRPC (using ***Tonic***)
-- REST (using ***Axum***)
+- Using ***Axum***:
+    - AWS Serverless Lambda Reader (routes for querying data)
+        - With AWS API Gateway
+    - REST Gateway Server
+
+- Using ***Tonic***
+    - gRPC Server
 
 ### Asynchronous Components
 
-Using the ***AWS SDK for Rust***
+- using ***Tokio***
+    - Asynchronous Tasks
 
-- AWS Serverless Lambda Writer
-- DynamoDB
-- EventBridge
+- Using the ***AWS SDK for Rust*** for:
+    - AWS Serverless Lambda Writer
+    - DynamoDB
+    - EventBridge
 
 ### Bridging Synchronous and Asynchronous Components In DriveDeposits
 
@@ -224,8 +238,8 @@ queries
 
 `just deployed-delete-drive-deposits-event-bus`
 
-calls dependent recipes - deletes [event rule with lambda target and then event bus] and then queries from dependent
-recipes
+calls dependent recipes - deletes (event rule with lambda target and then event bus) and then queries from dependent
+recipes (with deployed-delete-drive-deposits-dynamodb-queries)
 
 #### create aws deployment related commands for EventBridge, EventBus, Cloudwatch log groups and Lambda Write DynamoDB function
 
@@ -250,6 +264,8 @@ gRPC server then performs calculations and sends calculation events to AWS Event
 a Lambda function connected to DynamoDB.
 
 `just post-calculate-portfolio-valid`
+
+Follow up with [Data population and Querying](#data-population-and-querying) section to see how to query the data.
 
 #### Command for AWS Lambda Invoke Check Directly
 
@@ -318,7 +334,18 @@ Should see "Ready." -- There is a Terminal now in Docker Desktop itself so that 
 
 ##### For actual AWS lambda query request
 
-`just get-query-by-portfolios-level`
+Update api_gateway_host per deployment to AWS and aws_portfolio_uuid per the post requests to populate
+in [justfile](justfile).
+
+Then you can perform the following queries:
+
+`just get-query-by-level-portfolios-delta-growth`
+
+`just get-query-by-level-portfolios-delta-growth`
+
+`just get-query-by-level-for-deposits-delta-growth`
+
+`just get-query-by-level-for-deposits-maturity-date`
 
 #### LocalStack populated with data
 

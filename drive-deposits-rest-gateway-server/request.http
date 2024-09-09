@@ -7,7 +7,7 @@ Content-Type: application/json
 Authorization: Bearer token
 Accept-Encoding: br, gzip, deflate
 
-< ./data/rest_request_valid.json
+< ./data/portfolio_request_valid.json
 
 # Expected Output:
 # For Calculate Drive Deposits API, use POST with Path /api/drive-deposits/calculate-portfolio
@@ -19,7 +19,7 @@ Content-Type: application/json
 Authorization: Bearer token
 Accept-Encoding: br, gzip, deflate
 
-< ./data/rest_request_valid.json
+< ./data/portfolio_request_valid.json
 
 # Expected Output:
 # {
@@ -285,7 +285,7 @@ Content-Type: application/json
 Authorization: Bearer token
 Accept-Encoding: br, gzip, deflate
 
-< ./data/rest_request_invalid_decimal.json
+< ./data/portfolio_request_invalid_decimal.json
 
 # Expected Output:
 # Input validation error: [new_delta.period: Validation error: length [{"value": String(""), "min": Number(1)}], Incorrect value: . Must be a valid decimal number., , new_banks[0].new_deposits[1].apy: Incorrect value: Hello. Must be a valid decimal number., ]
@@ -298,7 +298,7 @@ Content-Type: application/json
 Authorization: Bearer token
 Accept-Encoding: br, gzip, deflate
 
-< ./data/rest_request_invalid_period_unit_account_type_decimal_bank_tz_start_date.json
+< ./data/portfolio_request_invalid_period_unit_account_type_decimal_bank_tz_start_date.json
 
 # Expected Output:
 # Input validation error: [new_banks[0].bank_tz: Error: failed to parse timezone. Incorrect timezone: America/Chicag. Must be a valid timezone., new_banks[0].new_deposits[0].start_date_in_bank_tz: Error: input contains invalid characters. Incorrect date format: 201901-01. Must be in ISO 8601 format YYYY-MM-DD., new_banks[0].new_deposits[2].apy: Incorrect value: Incorrect!. Must be a valid decimal number., new_banks[2].new_deposits[2].account_type: Error: Matching variant not found. Incorrect account_type: Svings. Must be Checking, Savings, CertificateOfDeposit, or BrokerageCertificateOfDeposit., , new_delta.period_unit: Incorrect period_unit: Century!. Must be Day, Week, Month, or Year., ]
@@ -310,7 +310,7 @@ Content-Type: application/json
 Authorization: Bearer token
 Accept-Encoding: br, gzip, deflate
 
-< ./data/rest_request_invalid_json_structure.json
+< ./data/portfolio_request_invalid_json_structure.json
 
 # Expected Output:
 # Axum Json Rejection error: JsonSyntaxError(JsonSyntaxError(Error { inner: Error { path: Path { segments: [Unknown] }, original: Error("key must be a string", line: 2, column: 3) } }))
@@ -321,7 +321,7 @@ Content-Type: application/json
 Authorization: Bearer token
 Accept-Encoding: br, gzip, deflate
 
-< ./data/rest_request_valid_90_days_delta_period.json
+< ./data/portfolio_request_valid_90_days_delta_period.json
 
 
 # Expected output
@@ -587,7 +587,7 @@ Content-Type: application/json
 Authorization: Bearer token
 Accept-Encoding: br, gzip, deflate
 
-< ./data/rest_request_valid_6_months_delta_period.json
+< ./data/portfolio_request_valid_6_months_delta_period.json
 
 
 # {

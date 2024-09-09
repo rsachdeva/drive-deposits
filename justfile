@@ -72,22 +72,22 @@ watch-build-drive-deposits-grpc-server:
 # .cargo/cargo.toml has SEND_CAL_EVENTS = "true" so we can overrride it here as needed
 # run only
 run-drive-deposits-check-cmd-valid:
-    SEND_CAL_EVENTS="false" cargo ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_valid.json
+    SEND_CAL_EVENTS="false" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid.json
 
 run-drive-deposits-check-cmd-valid-send-events:
-    SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_valid.json
+    SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid.json
 
 run-drive-deposits-check-cmd-valid-send-events-lesser-amount-investments:
-    SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_valid_lesser_amount_investments.json
+    SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid_lesser_amount_investments.json
 
 run-drive-deposits-check-cmd-valid-send-events-greater-amount-investments:
-    SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_valid_greater_amount_investments.json
+    SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid_greater_amount_investments.json
 
 run-drive-deposits-check-cmd-invalid-decimal:
-    SEND_CAL_EVENTS="false" cargo ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_invalid_decimal.json
+    SEND_CAL_EVENTS="false" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_invalid_decimal.json
 
 run-drive-deposits-check-cmd-invalid:
-    SEND_CAL_EVENTS="false" cargo ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_invalid_period_unit_account_type_decimal_bank_tz_start_date.json
+    SEND_CAL_EVENTS="false" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_invalid_period_unit_account_type_decimal_bank_tz_start_date.json
 
 run-drive-deposits-grpc-server:
     SEND_CAL_EVENTS="true" cargo run --package drive-deposits-grpc-server --bin drive-deposits-grpc-server
@@ -294,18 +294,18 @@ awslocal-list-dynamodb-tables:
 
 # localstack run
 localstack-run-drive-deposits-check-cmd-valid-send-events:
-    USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_valid.json
+    USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid.json
 
 localstack-run-drive-deposits-check-cmd-valid-send-events-lesser-amount-investments:
-    USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_valid_lesser_amount_investments.json
+    USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid_lesser_amount_investments.json
 
 localstack-run-drive-deposits-check-cmd-valid-send-events-greater-amount-investments:
-    USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_valid_greater_amount_investments.json
+    USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid_greater_amount_investments.json
 
 # localstack watch
 # .cargo/config.toml has USE_LOCALSTACK = "false" so we can overrride it here as needed
 localstack-watch-run-drive-deposits-check-cmd-valid-send-events:
-    USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo watch -x "ddcheck -- drive-deposits-rest-gateway-server/data/rest_request_valid.json"
+    USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo watch -x "ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid.json"
 
 # localstack logs from samlocal
 localstack-logs-drive-deposits-event-rules-lambda:
@@ -333,7 +333,7 @@ post-root:
         -H "Content-Type: application/json" \
         -H "Authorization: {{token}}" \
         -H "Accept-Encoding: gzip, deflate" \
-        --data @./data/rest_request_valid.json \
+        --data @./data/portfolio_request_valid.json \
         --compressed
 
 # Recipe for the POST request with correct API path
@@ -343,7 +343,7 @@ post-calculate-portfolio-valid:
         -H "Content-Type: application/json" \
         -H "Authorization: {{token}}" \
         -H "Accept-Encoding: gzip, deflate" \
-        --data @./data/rest_request_valid.json \
+        --data @./data/portfolio_request_valid.json \
         --compressed \
         | jq
 
@@ -353,7 +353,7 @@ post-calculate-portfolio-valid-lesser-amount:
         -H "Content-Type: application/json" \
         -H "Authorization: {{token}}" \
         -H "Accept-Encoding: gzip, deflate" \
-        --data @./data/rest_request_valid_lesser_amount_investments.json \
+        --data @./data/portfolio_request_valid_lesser_amount_investments.json \
         --compressed \
         | jq
 
@@ -363,7 +363,7 @@ post-calculate-portfolio-valid-greater-amount:
         -H "Content-Type: application/json" \
         -H "Authorization: {{token}}" \
         -H "Accept-Encoding: gzip, deflate" \
-        --data @./data/rest_request_valid_greater_amount_investments.json \
+        --data @./data/portfolio_request_valid_greater_amount_investments.json \
         --compressed \
         | jq
 
@@ -375,7 +375,7 @@ post-calculate-portfolio-invalid-decimal:
         -H "Content-Type: application/json" \
         -H "Authorization: {{token}}" \
         -H "Accept-Encoding: gzip, deflate" \
-        --data @./data/rest_request_invalid_decimal.json \
+        --data @./data/portfolio_request_invalid_decimal.json \
         --compressed
 
 # Recipe for the invalid period unit, account type, decimal, and bank tz start date request
@@ -385,7 +385,7 @@ post-calculate-portfolio-invalid-period-unit-account-type-decimal-bank-tz-start-
         -H "Content-Type: application/json" \
         -H "Authorization: {{token}}" \
         -H "Accept-Encoding: gzip, deflate" \
-        --data @./data/rest_request_invalid_period_unit_account_type_decimal_bank_tz_start_date.json \
+        --data @./data/portfolio_request_invalid_period_unit_account_type_decimal_bank_tz_start_date.json \
         --compressed
 
 # Recipe for the invalid JSON structure request
@@ -395,7 +395,7 @@ post-calculate-portfolio-invalid-json-structure:
         -H "Content-Type: application/json" \
         -H "Authorization: {{token}}" \
         -H "Accept-Encoding: gzip, deflate" \
-        --data @./data/rest_request_invalid_json_structure.json \
+        --data @./data/portfolio_request_invalid_json_structure.json \
         --compressed
 
 # Recipe for the valid 90 days delta period request
@@ -405,7 +405,7 @@ post-calculate-portfolio-valid-90-days-delta-period:
         -H "Content-Type: application/json" \
         -H "Authorization: {{token}}" \
         -H "Accept-Encoding: gzip, deflate" \
-        --data @./data/rest_request_valid_90_days_delta_period.json \
+        --data @./data/portfolio_request_valid_90_days_delta_period.json \
         --compressed \
         | jq
 
@@ -416,7 +416,7 @@ post-calculate-portfolio-valid-6-months-delta-period:
         -H "Content-Type: application/json" \
         -H "Authorization: {{token}}" \
         -H "Accept-Encoding: gzip, deflate" \
-        --data @./data/rest_request_valid_6_months_delta_period.json \
+        --data @./data/portfolio_request_valid_6_months_delta_period.json \
         --compressed \
         | jq
 
@@ -563,25 +563,26 @@ clean-build-drive-deposits-dynamodb-queries:
 # rest lambda query curl GET commands
 # Recipe for query by responses level for different responses submitted and sorted by delta period per correctly saved in order in dynamodb
 
-api_gateway_host := "https://979g34of3m.execute-api.us-west-2.amazonaws.com/"
+aws_api_gateway_host := "https://6owusuo4b1.execute-api.us-west-2.amazonaws.com"
 get-query-by-level-portfolios-delta-growth:
     cd drive-deposits-lambda-dynamodb-reader && \
-    curl '{{api_gateway_host}}/by-level-for-portfolios/delta-growth?order=asc&top_k=10' \
+    curl '{{aws_api_gateway_host}}/by-level-for-portfolios/delta-growth?order=desc&top_k=10' \
         | jq
 
+aws_portfolio_uuid := "b8f21957-4efa-450d-8857-2c7c93bbb326"
 get-query-by-level-for-banks-delta-growth:
     cd drive-deposits-lambda-dynamodb-reader && \
-    curl --location '{{api_gateway_host}}/portfolios/9ee49480-359c-4c87-a31d-a92aff218601/by-level-for-banks/delta-growth/?order=asc&top_k=10' \
+    curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-banks/delta-growth?order=desc&top_k=10' \
         | jq
 
 get-query-by-level-for-deposits-delta-growth:
     cd drive-deposits-lambda-dynamodb-reader && \
-    curl --location '{{api_gateway_host}}/portfolios/9ee49480-359c-4c87-a31d-a92aff218601/by-level-for-deposits/delta-growth?order=asc&top_k=10' \
+    curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-deposits/delta-growth?order=desc&top_k=10' \
         | jq
 
 get-query-by-level-for-deposits-maturity-date:
     cd drive-deposits-lambda-dynamodb-reader && \
-    curl --location '{{api_gateway_host}}/portfolios/9ee49480-359c-4c87-a31d-a92aff218601/by-level-for-deposits/delta-growth?order=asc&top_k=10' \
+    curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-deposits/maturity-date?order=asc&top_k=3' \
         | jq
 
 # for git release tags
