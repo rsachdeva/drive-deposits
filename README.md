@@ -9,11 +9,12 @@
 - [Synchronous Components](#synchronous-components)
 - [Asynchronous Components](#asynchronous-components)
 - [Bridging Synchronous and Asynchronous Components In DriveDeposits](#bridging-synchronous-and-asynchronous-components-in-drivedeposits)
-- [AWS EventBridge, EventBus and Targets include Cloudwatch Log group and Lambda Deployment](#aws-eventbridge-eventbus-and-targets-include-cloudwatch-log-group-and-lambda-deployment)
+- [Deployment](#deployment)
 - [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
-- [Development Tool: LocalStack](#development-tool-localstack)
-- [Data population and Querying](#data-population-and-querying)
+- [Data population](#data-population)
+- [Querying with custom domain](#querying-with-custom-domain)
 - [Development Tool: cargo lambda](#development-tool-cargo-lambda)
+- [Development Tool: LocalStack](#development-tool-localstack)
 - [Clean](#clean)
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
 - [Member crates in workspace](#member-crates-in-workspace)
@@ -148,6 +149,8 @@ curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-de
         | jq
 ```
 
+[Back to Table of Contents](#table-of-contents)
+
 ### DriveDeposits: Architectural Pillars
 
 * **Event-Driven Architecture:** Built on AWS EventBridge and EventBus, DriveDeposits ensures seamless communication and
@@ -178,6 +181,8 @@ curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-de
 **Experience the future of financial calculations with DriveDeposits!**
 Documentation for Drive Deposits is work in progress. More details will be added.
 
+[Back to Table of Contents](#table-of-contents)
+
 ### Synchronous Components
 
 - Using ***Axum***:
@@ -188,6 +193,8 @@ Documentation for Drive Deposits is work in progress. More details will be added
 - Using ***Tonic***
     - gRPC Server
 
+[Back to Table of Contents](#table-of-contents)
+
 ### Asynchronous Components
 
 - using ***Tokio***
@@ -197,6 +204,8 @@ Documentation for Drive Deposits is work in progress. More details will be added
     - AWS Serverless Lambda Writer
     - DynamoDB
     - EventBridge
+
+[Back to Table of Contents](#table-of-contents)
 
 ### Bridging Synchronous and Asynchronous Components In DriveDeposits
 
@@ -223,9 +232,22 @@ The Lambda function interacts with an AWS DynamoDB table to read and query the r
 the `aws-sdk-rust` crate to communicate with the DynamoDB service. The Axum web framework is used to define the API
 routes and handle HTTP requests and responses.
 
-### AWS EventBridge, EventBus and Targets include Cloudwatch Log group and Lambda Deployment
+[Back to Table of Contents](#table-of-contents)
 
-This project utilizes the [Justfile](https://github.com/casey/just) for managing project-level tasks.
+### Deployment
+
+This project uses SAM (Serverless Application Model) for deploying the following AWS resources:
+
+- EventBridge
+- EventBus
+- Targets (including CloudWatch Log group)
+- Lambda function
+- DynamoDB table
+
+The SAM-based deployment streamlines the process of setting up and managing these AWS services for the DriveDeposits
+application.
+
+This project also utilizes the [Justfile](https://github.com/casey/just) for managing project-level recipes.
 
 #### deploy everything -- aws deployment related commands for EventBridge, EventBus, Cloudwatch log groups and Lambda target function for writing to DynamoDB and Lambda DynamoDB reader
 
@@ -271,6 +293,8 @@ Follow up with [Data population and Querying](#data-population-and-querying) sec
 
 `just aws-invoke-drive-deposits-event-rules-lambda`
 
+[Back to Table of Contents](#table-of-contents)
+
 ### Hybrid Integration Testing Tool
 
 #### Efficient Command for Synchronous Calculation Flow and Asynchronous AWS Serverless Event Testing
@@ -294,23 +318,13 @@ Key features:
 .cargo/config.toml has alias for command line [drive-deposits-check-cmd](drive-deposits-check-cmd) so can be run using
 `cargo ddcheck` For help see `cargo ddcheck -- --help`
 
-### Development Tool: LocalStack
+##### Integration tests
 
-Localstack, being an ephemeral service, can be started and stopped as needed. This means that unless the state is
-persisted, LocalStack provides a clean slate every time it's restarted. This feature can expedite the development and
-deployment process as it eliminates the need to manually delete resources.
+`just test`
 
-Following is convenience so that in development can iterate faster:
+[Back to Table of Contents](#table-of-contents)
 
-`just localstack-start`
-
-Should see "Ready." -- There is a Terminal now in Docker Desktop itself so that is a good place to run this command.
-
-#### deploy everything in localstack -- aws deployment related commands for EventBridge, EventBus, Cloudwatch log groups and Lambda target function for writing to DynamoDB and Lambda DynamoDB reader
-
-`just localstack-deploy-drive-deposits-dynamodb-queries`
-
-### Data population and Querying
+### Data population
 
 #### AWS Populated with Basic Data for Queries Lambda
 
@@ -332,14 +346,31 @@ Should see "Ready." -- There is a Terminal now in Docker Desktop itself so that 
 
 `just run-drive-deposits-check-cmd-valid-send-events`
 
-##### For actual AWS lambda query request
+[Back to Table of Contents](#table-of-contents)
 
-Update api_gateway_host per deployment to AWS and aws_portfolio_uuid per the post requests to populate
-in [justfile](justfile).
+### Querying with custom domain
 
-Then you can perform the following queries:
+Successfully configured custom domain (https://api-queries.drivedeposits.drinnovations.us) for API Gateway so with some
+existing data queries can be tried
+by running just recipes for querying
+
+Then you can perform the following from [justfile](justfile) for portfolios delta growth sorted in descending order with
+top 3 items:
 
 `just get-query-by-level-portfolios-delta-growth`
+
+or directly click link to see some data in your browser or Postman like tool - with pretty print:
+
+[Drive Deposits By Level For Portfolios API Query](https://api-queries.drivedeposits.drinnovations.us/by-level-for-portfolios/delta-growth?order=desc&top_k=3)
+
+which actually calls
+
+```curl
+https://api-queries.drivedeposits.drinnovations.us/by-level-for-portfolios/delta-growth?order=desc&top_k=3
+```
+
+Update aws_portfolio_uuid per the portfolios response to populate
+in [justfile](justfile). Adjusted `justfile` with a test portfolio UUID for querying.
 
 `just get-query-by-level-portfolios-delta-growth`
 
@@ -347,26 +378,67 @@ Then you can perform the following queries:
 
 `just get-query-by-level-for-deposits-maturity-date`
 
+[Back to Table of Contents](#table-of-contents)
+
+### Development Tool: cargo lambda
+
+Following is convenience so that in development can iterate faster when skipping sam resources:
+
+for only build watching lambda without using sam
+`just cargo-lambda-build-watching-drive-deposits-event-rules-lambda`
+
+this is different from cargo lambda watch used with invoke -- The watch subcommand emulates the AWS Lambda control plane
+API. The function is not compiled until the first time that you try to execute it.
+`just cargo-lambda-watch-drive-deposits-event-rules-lambda`
+
+#### command for cargo lambda invoke check directly
+
+`just cargo-lambda-invoke-drive-deposits-event-rules-lambda`
+
+[Back to Table of Contents](#table-of-contents)
+
+### Development Tool: LocalStack
+
+Localstack, being an ephemeral service, can be started and stopped as needed. This means that unless the state is
+persisted, LocalStack provides a clean slate every time it's restarted. This feature can expedite the development and
+deployment process as it eliminates the need to manually delete resources.
+
+Following is convenience so that in development can iterate faster:
+
+`just localstack-start`
+
+Should see "Ready." -- There is a Terminal now in Docker Desktop itself so that is a good place to run this command.
+
+#### deploy everything in localstack -- aws deployment related commands for EventBridge, EventBus, Cloudwatch log groups and Lambda target function for writing to DynamoDB and Lambda DynamoDB reader
+
+`just localstack-deploy-drive-deposits-dynamodb-queries`
+
 #### LocalStack populated with data
 
-Sanity check with LocalStack/ Working with queries lambda directly with cargo lambda and
+Sanity check with LocalStack/ Working with queries lambda directly with cargo lambda and localstack
 
 `just localstack-start`
 
 `just localstack-deploy-drive-deposits-event-rules`
 
 Populate with
+
 `just localstack-run-drive-deposits-check-cmd-valid-send-events`
+
 and then
+
 `just localstack-run-drive-deposits-check-cmd-valid-send-events-lesser-amount-investments`
+
 and then
+
 `just localstack-run-drive-deposits-check-cmd-valid-send-events-greater-amount-investments`
-and can also repeat these commands
+
+and can also repeat these commands for more data
 
 There is also a watch command that can be used to watch for changes in the code and automatically run the check command
 `just localstack-watch-run-drive-deposits-check-cmd-valid-send-events`
 
-For queries lambda; replace table name in localstack in
+For queries lambda, replace table name in localstack in
 cargo-lambda-watch-drive-deposits-lambda-dynamodb-reader-localstack-for-dynamodb
 
 Then can use cargo-lambda with dynamodb in localstack already populated with data:
@@ -387,19 +459,7 @@ Following is convenience so that in development can iterate faster:
 
 `just awslocal-invoke-drive-deposits-event-rules-lambda`
 
-### Development Tool: cargo lambda
-
-Following is convenience so that in development can iterate faster when skipping sam resources:
-
-for build watching lambda without using sam
-`just cargo-lambda-build-watching-drive-deposits-event-rules-lambda`
-
-this is different from cargo lambda watch used with invoke
-`just cargo-lambda-watch-drive-deposits-event-rules-lambda`
-
-#### command for cargo lambda invoke check directly
-
-`just cargo-lambda-invoke-drive-deposits-event-rules-lambda`
+[Back to Table of Contents](#table-of-contents)
 
 ### Clean
 
@@ -408,8 +468,10 @@ cargo clean is used but since there are lambda we have .aws-sam folders created 
 so we have
 `just clean-with-lambdas`
 
-for quick build only that can be used after cleaning
+for quick build that can be used after cleaning everything
 `just build-with-lambdas`
+
+[Back to Table of Contents](#table-of-contents)
 
 ### Configurations for DriveDeposits
 
@@ -424,6 +486,8 @@ The project uses custom configurations defined in `.cargo/config.toml`:
 
 These configurations allow for flexible development and testing environments, enabling easy switching between local and
 AWS deployments.
+
+[Back to Table of Contents](#table-of-contents)
 
 ### Member crates in workspace
 
@@ -457,5 +521,7 @@ maintaining their individual identities within the Rust ecosystem.
 * Error handling when reading items from DynamoDB and creating Response for Query requests indicates the source of the
   error and the level context in which it occurred.
 * Error logs can be seen in CloudWatch Logs
+
+[Back to Table of Contents](#table-of-contents)
 
 [Copyright (c) 2024 Rohit Sachdeva](LICENSE)

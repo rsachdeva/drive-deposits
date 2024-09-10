@@ -425,7 +425,7 @@ post-calculate-portfolio-valid-6-months-delta-period:
 # lambda reader for dynamodb queries per writes by lambda writer to dynamodb in lambda target
 ########################
 
-# cargo lambda for pure local development start withiout even localstack conatiner
+# cargo lambda for pure local development start without even localstack container
 # if needed for cargo lambda without going through sam for just lambda function
 #    cargo lambda build --release
 cargo-lambda-build-drive-deposits-lambda-dynamodb-reader:
@@ -561,15 +561,14 @@ clean-build-drive-deposits-dynamodb-queries:
 
 
 # rest lambda query curl GET commands
-# Recipe for query by responses level for different responses submitted and sorted by delta period per correctly saved in order in dynamodb
-
-aws_api_gateway_host := "https://6owusuo4b1.execute-api.us-west-2.amazonaws.com"
+# Successfully configured custom domain for API Gateway instead of Invoke URL https://6owusuo4b1.execute-api.us-west-2.amazonaws.com!
+aws_api_gateway_host := "https://api-queries.drivedeposits.drinnovations.us"
 get-query-by-level-portfolios-delta-growth:
     cd drive-deposits-lambda-dynamodb-reader && \
-    curl '{{aws_api_gateway_host}}/by-level-for-portfolios/delta-growth?order=desc&top_k=10' \
+    curl '{{aws_api_gateway_host}}/by-level-for-portfolios/delta-growth?order=desc&top_k=3' \
         | jq
 
-aws_portfolio_uuid := "b8f21957-4efa-450d-8857-2c7c93bbb326"
+aws_portfolio_uuid := "7775a5c9-b97f-4c7c-9e04-4490ec640b22"
 get-query-by-level-for-banks-delta-growth:
     cd drive-deposits-lambda-dynamodb-reader && \
     curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-banks/delta-growth?order=desc&top_k=10' \
