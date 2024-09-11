@@ -568,7 +568,7 @@ get-query-by-level-portfolios-delta-growth:
     curl '{{aws_api_gateway_host}}/by-level-for-portfolios/delta-growth?order=desc&top_k=3' \
         | jq
 
-aws_portfolio_uuid := "7775a5c9-b97f-4c7c-9e04-4490ec640b22"
+aws_portfolio_uuid := "1913a98b-9a20-4a10-b2a7-c31295497c0a"
 get-query-by-level-for-banks-delta-growth:
     cd drive-deposits-lambda-dynamodb-reader && \
     curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-banks/delta-growth?order=desc&top_k=10' \

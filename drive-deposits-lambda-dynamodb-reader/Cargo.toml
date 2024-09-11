@@ -1,6 +1,6 @@
 [package]
 name = "drive-deposits-lambda-dynamodb-reader"
-version = "0.10.0"
+version = "0.20.0"
 edition = "2021"
 
 # Starting in Rust 1.62 you can use `cargo add` to add dependencies 
