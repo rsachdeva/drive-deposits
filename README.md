@@ -15,7 +15,7 @@
 - [Querying with custom domain](#querying-with-custom-domain)
 - [Development Tool: cargo lambda](#development-tool-cargo-lambda)
 - [Development Tool: LocalStack](#development-tool-localstack)
-- [Clean](#clean)
+- [Clean And Build](#clean-and-build)
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
 - [Member crates in workspace](#member-crates-in-workspace)
 
@@ -461,7 +461,7 @@ Following is convenience so that in development can iterate faster:
 
 [Back to Table of Contents](#table-of-contents)
 
-### Clean
+### Clean And Build
 
 cargo clean is used but since there are lambda we have .aws-sam folders created by sam also that we have a clean
 

@@ -1,0 +1,132 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'v*'  # This will match any branch starting with 'v'
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Note: Rust is preinstalled on GitHub runners (example shows rustc 1.80.1, cargo 1.80.1 as of this commit)
+      #      - name: Set up Rust
+      #        uses: dtolnay/rust-toolchain@stable
+      - name: Check Rust version
+        run: |
+          echo "Installed rustc version:"
+          rustc --version
+          echo "Installed cargo version:"
+          cargo --version
+
+      - name: Install Just
+        uses: extractions/setup-just@v2
+
+      - name: Check Just version
+        run: |
+          echo "Installed just version:"
+          just --version
+
+      - name: Install protoc
+        uses: taiki-e/install-action@v2
+        with:
+          tool: protoc@3.28.0
+
+      - name: Check protoc version
+        run: |
+          echo "Installed protoc version:"
+          protoc --version
+
+      - name: Install Cargo Lambda
+        run: |
+          pip3 install cargo-lambda
+          echo "Installed cargo lambda version:"
+          cargo lambda --version
+
+      - name: Clean with lambdas
+        run: just clean-with-lambdas
+
+      - name: Build with lambdas
+        run: just build-with-lambdas
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Note: Rust is preinstalled on GitHub runners (example shows rustc 1.80.1, cargo 1.80.1 as of this commit)
+      #      - name: Set up Rust
+      #        uses: dtolnay/rust-toolchain@stable
+      - name: Check Rust version
+        run: |
+          echo "Installed rustc version:"
+          rustc --version
+          echo "Installed cargo version:"
+          cargo --version
+
+      - name: Install Just
+        uses: extractions/setup-just@v2
+
+      - name: Check Just version
+        run: |
+          echo "Installed just version:"
+          just --version
+
+      - name: Install protoc
+        uses: taiki-e/install-action@v2
+        with:
+          tool: protoc@3.28.0
+
+      - name: Check protoc version
+        run: |
+          echo "Installed protoc version:"
+          protoc --version
+
+      - name: Install Cargo Lambda
+        run: |
+          pip3 install cargo-lambda
+          echo "Installed cargo lambda version:"
+          cargo lambda --version
+
+      - name: Run integration tests
+        run: just test
+
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build
+#
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+
+# Note: Rust is preinstalled on GitHub runners (example shows rustc 1.80.1, cargo 1.80.1 as of this commit)
+#      - name: Set up Rust
+#        uses: dtolnay/rust-toolchain@stable
+#      - name: Check Rust version
+#        run: |
+#          rustc --version
+#          cargo --version
+#
+#      - name: Install Just
+#        uses: extractions/setup-just@v1
+#        with:
+#          just-version: 1.5.0
+#
+#      - name: Deploy to AWS
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          AWS_DEFAULT_REGION: us-west-2
+#        run: just deploy-drive-deposits-dynamodb-queries
