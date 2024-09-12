@@ -25,28 +25,28 @@ udeps:
     cargo +nightly udeps --workspace
 
 build-drive-deposits-cal-types:
-    cd drive-deposits-cal-types
+    cd drive-deposits-cal-types && \
     cargo build --package drive-deposits-cal-types
 
 build-drive-deposits-proto-grpc-types:
-    cd drive-deposits-proto-grpc-types
+    cd drive-deposits-proto-grpc-types && \
     cargo build --package drive-deposits-proto-grpc-types
 
 build-drive-deposits-rest-types:
-    cd drive-deposits-rest-types
+    cd drive-deposits-rest-types && \
     cargo build --package drive-deposits-rest-types
 
 # See README.md for more details.
 build-drive-deposits-check-cmd:
-    cd drive-deposits-check-cmd
+    cd drive-deposits-check-cmd && \
     cargo build --package drive-deposits-check-cmd
 
 build-drive-deposits-grpc-server:
-    cd drive-deposits-grpc-server
+    cd drive-deposits-grpc-server && \
     cargo build --package drive-deposits-grpc-server
 
 build-drive-deposits-rest-gateway-server:
-    cd drive-deposits-rest-gateway-server
+    cd drive-deposits-rest-gateway-server && \
     cargo build --package drive-deposits-rest-gateway-server
 
 # watching builds
@@ -191,7 +191,7 @@ cargo-lambda-build-drive-deposits-event-rules-lambda:
     cargo lambda build
 
 cargo-lambda-build-watching-drive-deposits-event-rules-lambda:
-    echo "building lambda function" && \
+    echo "build watching lambda function" && \
     cd drive-deposits-logs-lambda-target && \
     cargo watch -x "lambda build"
 
@@ -434,7 +434,7 @@ cargo-lambda-build-drive-deposits-lambda-dynamodb-reader:
     cargo lambda build
 
 cargo-lambda-build-watching-drive-deposits-lambda-dynamodb-reader:
-    USE_LOCALSTACK="true" echo "building lambda reader function" && \
+    USE_LOCALSTACK="true" echo "build watching lambda reader function" && \
     cd drive-deposits-lambda-dynamodb-reader && \
     cargo watch -x "lambda build"
 
@@ -445,7 +445,7 @@ cargo-lambda-build-watching-drive-deposits-lambda-dynamodb-reader:
 # export USE_LOCALSTACK="true"
 # echo $DRIVE_DEPOSITS_TABLE_NAME
 # echo $USE_LOCALSTACK
-cargo-lambda-watch-drive-deposits-lambda-dynamodb-reader-localstack-for-dynamodb:
+cargo-lambda-watch-drive-deposits-lambda-dynamodb-reader-localstack:
     echo "watching lambda reader function" && \
     cd drive-deposits-lambda-dynamodb-reader && \
     export DRIVE_DEPOSITS_TABLE_NAME={{localstack_drive_deposit_table_name}} && \

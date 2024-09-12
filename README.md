@@ -439,10 +439,10 @@ There is also a watch command that can be used to watch for changes in the code 
 `just localstack-watch-run-drive-deposits-check-cmd-valid-send-events`
 
 For queries lambda, replace table name in localstack in
-cargo-lambda-watch-drive-deposits-lambda-dynamodb-reader-localstack-for-dynamodb
+cargo-lambda-watch-drive-deposits-lambda-dynamodb-reader-localstack recipe
 
 Then can use cargo-lambda with dynamodb in localstack already populated with data:
-`just cargo-lambda-watch-drive-deposits-lambda-dynamodb-reader-localstack-for-dynamodb`
+`just cargo-lambda-watch-drive-deposits-lambda-dynamodb-reader-localstack`
 
 And for actual cargo lambda apigw events
 `just cargo-lambda-invoke-drive-deposits-lambda-dynamodb-reader-apigw-event-query-for-portfolios`

@@ -1,6 +1,5 @@
 [env]
 # https://doc.rust-lang.org/cargo/reference/config.html#env
-# by_level_lambda_writer=debug for bindary being by_level_lambda_writer for lambda
 RUST_LOG = { value = "drive_deposits_rest_types=debug,drive_deposits_proto_grpc_types=debug,drive_deposits_event_source=debug,drive_deposits_lambda_db_types=debug,drive_deposits_logs_lambda_target=debug,by_level_lambda_writer=debug,drive_deposits_lambda_dynamodb_reader=debug,by_level_lambda_reader=debug,drive_deposits_cal_types=debug,drive_deposits_check_cmd=debug,drive_deposits_grpc_server=debug,drive_deposits_rest_gateway_server=debug", force = true }
 
 
