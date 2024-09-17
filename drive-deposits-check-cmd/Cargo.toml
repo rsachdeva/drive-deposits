@@ -30,3 +30,6 @@ drive-deposits-event-source = { path = "../drive-deposits-event-source" }
 assert_cmd = "2.0.14"
 predicates = "3.1.0"
 #pretty_assertions = "1.4.0"
+
+[features]
+aws_deploy = []

@@ -119,6 +119,9 @@ watch-run-drive-deposits-rest-gateway-server:
 test:
     cargo test --workspace
 
+test-with-aws-deploy-only:
+    cargo test -p drive-deposits-check-cmd --test test_delta_calculator_cli --features aws_deploy -- test_portfolio_request_two_banks_json_valid --exact
+
 # watch test
 watch-test:
     cargo watch -x "test --workspace"

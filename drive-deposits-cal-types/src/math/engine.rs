@@ -142,17 +142,17 @@ async fn build_from_new_banks(
     Ok(banks)
 }
 
-async fn build_from_bank_request(
-    bank_req: PortfolioRequest,
+async fn build_from_portfolio_request(
+    portfolio_req: PortfolioRequest,
     eb: Arc<Option<DriveDepositsEventBridge>>,
 ) -> Result<PortfolioResponse, CalculationHaltError> {
     let uuid = Uuid::new_v4();
-    info!("build_from_bank_request uuid created: {:?}", uuid);
+    info!("build_from_portfolio_request uuid created: {:?}", uuid);
     let created_at = chrono::Utc::now();
     let created_at_iso8061 = created_at.to_rfc3339_opts(SecondsFormat::Micros, true);
     let eb_clone = eb.clone();
-    let new_delta = Arc::new(bank_req.new_delta);
-    let banks = build_from_new_banks(bank_req.new_banks, new_delta.clone(), eb).await?;
+    let new_delta = Arc::new(portfolio_req.new_delta);
+    let banks = build_from_new_banks(portfolio_req.new_banks, new_delta.clone(), eb).await?;
     let outcome = build_outcome_from_banks(&banks, new_delta.clone().as_ref());
 
     let bank_response = PortfolioResponse {
@@ -181,20 +181,23 @@ async fn build_from_bank_request(
     Ok(bank_response)
 }
 
-#[instrument(skip(bank_req, eb))]
+#[instrument(skip(portfolio_req, eb))]
 pub async fn calculate_portfolio(
-    bank_req: PortfolioRequest,
+    portfolio_req: PortfolioRequest,
     eb: Option<DriveDepositsEventBridge>,
 ) -> Result<PortfolioResponse, CalculationHaltError> {
     debug!(
-        "Starting calculation by period per BankRequest overall: {:?}",
-        bank_req
+        "Starting calculation by period per PortfolioRequest overall: {:?}",
+        portfolio_req
     );
-    if eb.is_none() {
-        info!("Drive Deposits SEND_CAL_EVENTS is false, so no events will be sent");
-    }
+    info!(
+        "Drive Deposits SEND_CAL_EVENTS is {}, so events will {}be sent",
+        eb.is_some(),
+        if eb.is_some() { "" } else { "not " }
+    );
+
     let eb_access = Arc::new(eb);
-    let bank_resp = build_from_bank_request(bank_req, eb_access).await?;
+    let bank_resp = build_from_portfolio_request(portfolio_req, eb_access).await?;
 
     Ok(bank_resp)
 }
