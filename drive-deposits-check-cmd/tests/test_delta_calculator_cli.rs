@@ -1,15 +1,13 @@
 use anyhow::Result;
 use assert_cmd::Command;
+use enable_tracing::initialize_test_span;
 use predicates::prelude::predicate;
 use tracing::debug;
 
-use enable_tracing::initialize_test_span;
-
 mod enable_tracing;
 
-// this test actually can be uncommented to check aws deploy works
-
-#[cfg(feature = "aws_deploy")]
+// with event bridge aws deployment using localstack
+#[cfg(feature = "localstack_aws_deploy")]
 #[test]
 fn test_portfolio_request_two_banks_json_valid() -> Result<()> {
     initialize_test_span("test_portfolio_request_two_banks_json_valid").in_scope(|| {
@@ -20,19 +18,20 @@ fn test_portfolio_request_two_banks_json_valid() -> Result<()> {
             //     "test=debug,drive_deposits_check_cmd=debug,drive_deposits_cal_types=debug",
             // )
             // SEND_CAL_EVENTS = "true"
-            // only when manually want to test - can separate by environment for tests
-            // actually sends events to aws event bridge
+            // only when manually want to test
+            // actually sends events to localstack aws event bridge
             // test will fail if SEND_CAL_EVENTS is true and event bridge is not set up
             .env("SEND_CAL_EVENTS", "true")
+            .env("USE_LOCALSTACK", "true")
             .arg(json_request_file_path)
             .assert()
             .success();
 
-        // let output = cmd.get_output();
-        // debug!(
-        //     "Command Stdout is: {}",
-        //     String::from_utf8_lossy(&output.stdout)
-        // );
+        let output = cmd.get_output();
+        debug!(
+            "Command Stdout is: {}",
+            String::from_utf8_lossy(&output.stdout)
+        );
         //
         // debug!(
         //     "Command Stderr is: {}",
@@ -52,6 +51,7 @@ fn test_portfolio_request_two_banks_json_valid() -> Result<()> {
     })
 }
 
+#[cfg(not(feature = "localstack_aws_deploy"))]
 #[test]
 fn test_portfolio_request_two_banks_json_invalid() -> Result<()> {
     initialize_test_span("portfolio_request_two_banks_json_invalid").in_scope(|| {

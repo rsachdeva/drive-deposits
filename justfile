@@ -119,8 +119,8 @@ watch-run-drive-deposits-rest-gateway-server:
 test:
     cargo test --workspace
 
-test-with-aws-deploy-only:
-    cargo test -p drive-deposits-check-cmd --test test_delta_calculator_cli --features aws_deploy -- test_portfolio_request_two_banks_json_valid --exact
+test-localtsack-aws-deploy:localstack-deploy-drive-deposits-event-rules
+    cargo test -p drive-deposits-check-cmd --test test_delta_calculator_cli --features localstack_aws_deploy
 
 # watch test
 watch-test:
@@ -519,7 +519,7 @@ localstack-build-drive-deposits-dynamodb-queries:
 localstack-deploy-drive-deposits-dynamodb-queries:localstack-deploy-drive-deposits-event-rules localstack-build-drive-deposits-dynamodb-queries
     echo "localstack deploy DriveDepositsByLevelLambdaReaderFunction" && \
     cd drive-deposits-lambda-dynamodb-reader && \
-    samlocal deploy --no-confirm-changeset --config-env dev --parameter-overrides UseLocalstack="true" Environment="dev" DriveDepositsTableName="drive-deposits-event-rules-dev-DRIVE-DEPOSITS-TABLE-NAME"
+    samlocal deploy --no-confirm-changeset --config-env dev --parameter-overrides UseLocalstack="true" Environment="dev" DriveDepositsTableName="drive-deposits-event-rules-dev-DRIVE-DEPOSITS-TABLE-NAME" || true
 
 # only this receipe for localstack
 # note localstack community version does not support apigwv2
