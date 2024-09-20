@@ -47,7 +47,7 @@ build-drive-deposits-grpc-server:
 
 build-drive-deposits-rest-gateway-server:
     cd drive-deposits-rest-gateway-server && \
-    cargo build --package drive-deposits-rest-gateway-server
+    cargo build --package drive-deposits-rest-gateway-server --tests
 
 # watching builds
 # .cargo/cargo.toml has SEND_CAL_EVENTS = "true" so we can overrride it here as needed
@@ -64,6 +64,10 @@ watch-build-drive-deposits-cal-types:
 watch-build-drive-deposits-event-source:
     cd drive-deposits-event-source
     cargo watch -x "build --package drive-deposits-event-source"
+
+watch-build-drive-deposits-rest-gateway-server-with-tests:
+    cd drive-deposits-rest-gateway-server && \
+    cargo watch -x "build --package drive-deposits-rest-gateway-server --tests"
 
 watch-build-drive-deposits-grpc-server:
     cd drive-deposits-grpc-server
@@ -116,11 +120,21 @@ watch-run-drive-deposits-rest-gateway-server:
     cargo watch --why --poll  -x "run --package drive-deposits-rest-gateway-server --bin drive-deposits-rest-gateway-server"
 
 # test
+# cargo help test
+# cargo test -- --help
+#  With --nocapture, since tests run in parallel by default, the output from different tests would indeed be mixed together. This can lead to interleaved output in the console
 test:
-    cargo test --workspace
+    cargo test --workspace --tests -- --show-output
 
-test-localtsack-aws-deploy:localstack-deploy-drive-deposits-event-rules
-    cargo test -p drive-deposits-check-cmd --test test_delta_calculator_cli --features localstack_aws_deploy
+test-intg:
+    cargo test --workspace --test '*' -- --show-output
+
+test-rest-gateway-server:
+    cargo test --package drive-deposits-rest-gateway-server --tests -- --show-output
+
+# localstart should be started before running this; use just localstack-start
+test-e2e:localstack-deploy-drive-deposits-event-rules
+    cargo test -p drive-deposits-check-cmd --test test_delta_calculator_cli --features localstack_aws_deploy -- --show-output
 
 # watch test
 watch-test:

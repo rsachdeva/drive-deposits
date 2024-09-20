@@ -11,6 +11,10 @@
 - [Bridging Synchronous and Asynchronous Components In DriveDeposits](#bridging-synchronous-and-asynchronous-components-in-drivedeposits)
 - [Deployment](#deployment)
 - [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
+- [Running Tests](#running-tests)
+    - [Integration tests](#integration-tests)
+    - [Unit and Integration tests](#unit-and-integration-tests)
+    - [End-to-End tests](#end-to-end-tests)
 - [Data population](#data-population)
 - [Querying with custom domain](#querying-with-custom-domain)
 - [Development Tool: cargo lambda](#development-tool-cargo-lambda)
@@ -318,9 +322,21 @@ Key features:
 .cargo/config.toml has alias for command line [drive-deposits-check-cmd](drive-deposits-check-cmd) so can be run using
 `cargo ddcheck` For help see `cargo ddcheck -- --help`
 
+[Back to Table of Contents](#table-of-contents)
+
+### Running Tests
+
 ##### Integration tests
 
+`just test-intg`
+
+##### Unit and Integration tests
+
 `just test`
+
+##### End-to-End tests
+
+`just test-e2e`
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -342,7 +358,7 @@ Key features:
 
 `just post-calculate-portfolio-valid-greater-amount`
 
-##### Alternatively Using check command without servers
+##### Alternatively, Using check command without servers
 
 `just run-drive-deposits-check-cmd-valid-send-events`
 

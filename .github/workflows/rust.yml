@@ -100,7 +100,7 @@ jobs:
           echo "Installed cargo lambda version:"
           cargo lambda --version
 
-      - name: Run integration tests
+      - name: Run unit and integration tests
         run: just test
 
 #  deploy:

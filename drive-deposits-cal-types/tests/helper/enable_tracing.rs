@@ -1,8 +1,9 @@
 use anyhow::Result;
 use once_cell::sync::OnceCell;
 use tracing::{debug, Span};
-use tracing_subscriber::{EnvFilter, registry};
+use tracing_subscriber::fmt::format::FmtSpan;
 use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::registry;
 use tracing_subscriber::util::SubscriberInitExt;
 
 static INIT: OnceCell<()> = OnceCell::new();
@@ -10,13 +11,10 @@ static INIT: OnceCell<()> = OnceCell::new();
 pub fn setup_tracing_subscriber() -> Result<()> {
     let rust_log = std::env::var("RUST_LOG")?;
     println!("RUST_LOG is {}", rust_log);
-    // can change level to debug to see all debug messages in  tests
-    // or to info not to see
-    // for test span added test=debug here
-    registry()
-        .with(EnvFilter::try_from_default_env()?.add_directive("test=debug".parse()?))
-        .with(tracing_subscriber::fmt::layer())
-        .init();
+    let fmt_layer = tracing_subscriber::fmt::layer()
+        .with_test_writer()
+        .with_span_events(FmtSpan::FULL);
+    registry().with(fmt_layer).try_init()?;
     debug!("tracing subscriber initialized");
     Ok(())
 }

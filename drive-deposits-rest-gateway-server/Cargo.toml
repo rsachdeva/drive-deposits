@@ -1,6 +1,6 @@
 [package]
 name = "drive-deposits-rest-gateway-server"
-version = "0.20.0"
+version = "0.30.0"
 edition = "2021"
 
 [dependencies]
@@ -16,9 +16,14 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 # tower and tower-http
 tower = { version = "0.4.13", features = ["full"] }
 tower-http = { version = "0.5.2", features = ["full"] }
+mockall = "0.13.0"
 
 # workspace member depdenencies
 drive-deposits-rest-types = { path = "../drive-deposits-rest-types" }
 # proto generated dependency here the drive-deposits-proto-grpc-types is still package
 # name so with dashes
 drive-deposits-proto-grpc-types = { path = "../drive-deposits-proto-grpc-types" }
+
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"
