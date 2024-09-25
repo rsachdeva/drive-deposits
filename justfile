@@ -78,6 +78,9 @@ watch-build-drive-deposits-grpc-server:
 run-drive-deposits-check-cmd-valid:
     SEND_CAL_EVENTS="false" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid.json
 
+run-drive-deposits-check-cmd-help:
+    SEND_CAL_EVENTS="true" cargo ddcheck -- --help
+
 run-drive-deposits-check-cmd-valid-send-events:
     SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid.json
 

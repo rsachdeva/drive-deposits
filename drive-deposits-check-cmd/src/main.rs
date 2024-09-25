@@ -12,26 +12,16 @@ use drive_deposits_check_cmd::portfolio::calculate::process_input;
 /// The data types used in this command are consistent with those in the actual services, ensuring a dependable method for rapid local verification of calculations.
 /// Use this command to verify calculations locally.
 ///
-/// ### Sample Commands
-/// Run the following commands through Cargo or directly with the binary:
-///
-/// - To check the version: `cargo run -- --version`
-///
-/// - For help: `cargo run -- --help`
-///
-/// - To run with a sample input file: `cargo run -- tests/data/input.json`
+/// To run with a sample input file: see the "Hybrid Integration Testing Tool" section in the README.md file.
 ///
 struct Args {
-    /// Input text
+    /// Input json file path
     #[arg(required(true))]
     json_request_file_path: String,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let rust_log = std::env::var("RUST_LOG")?;
-    println!("in drive-deposits-check-cmd RUST_LOG is {}", rust_log);
-
     registry()
         .with(EnvFilter::try_from_default_env()?)
         // added in .cargo/config.tom .add_directive("drive_deposits_local=debug".parse()?))

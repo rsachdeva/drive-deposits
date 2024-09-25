@@ -313,9 +313,12 @@ Key features:
 * Sends calculations to EventBridge for comprehensive sanity testing
 * Validates event routing to appropriate destinations (log groups, AWS Lambda functions, DynamoDB)
 * Allows developers to verify end-to-end flow of calculations, event handling, and data persistence
-  Execute the tool with:
-  `just run-drive-deposits-check-cmd-valid-send-events`
-  This streamlined approach significantly enhances development efficiency and system reliability testing.
+
+Execute the tool with:
+
+`just run-drive-deposits-check-cmd-valid-send-events`
+
+This streamlined approach significantly enhances development efficiency and system reliability testing.
 
 ###### Alias
 
