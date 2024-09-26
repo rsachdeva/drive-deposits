@@ -21,6 +21,7 @@
 - [Development Tool: LocalStack](#development-tool-localstack)
 - [Clean And Build](#clean-and-build)
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
+- [Current System Design](#current-system-design)
 - [Member crates in workspace](#member-crates-in-workspace)
 
 ### Domain Driven Terminology:
@@ -291,7 +292,7 @@ a Lambda function connected to DynamoDB.
 
 `just post-calculate-portfolio-valid`
 
-Follow up with [Data population and Querying](#data-population-and-querying) section to see how to query the data.
+Follow up with [Data population](#data-population) section to see how to query the data.
 
 #### Command for AWS Lambda Invoke Check Directly
 
@@ -505,6 +506,12 @@ The project uses custom configurations defined in `.cargo/config.toml`:
 
 These configurations allow for flexible development and testing environments, enabling easy switching between local and
 AWS deployments.
+
+[Back to Table of Contents](#table-of-contents)
+
+### Current System Design
+
+![DriveDeposits.drawio.svg](DriveDeposits.drawio.svg)
 
 [Back to Table of Contents](#table-of-contents)
 
