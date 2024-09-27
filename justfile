@@ -269,7 +269,24 @@ localstack-start:localstack-build
     docker run -p 4566:4566 -p 4510-4559:4510-4559 \
             -v ${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack \
             -v /var/run/docker.sock:/var/run/docker.sock \
+            --name localstack-container \
             custom-localstack
+
+localstack-start-detached:localstack-build
+    # Run a container from the built image, mapping the ports
+    docker run -d -p 4566:4566 -p 4510-4559:4510-4559 \
+            -v ${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            --name localstack-container \
+            custom-localstack
+
+localstack-logs:
+    # View logs of the LocalStack container
+    docker logs localstack-container
+
+localstack-stop:
+    docker stop localstack-container && \
+    docker rm localstack-container
 
 # after localstack started
 # in localstack event source with bus
