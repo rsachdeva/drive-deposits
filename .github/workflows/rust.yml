@@ -103,79 +103,84 @@ jobs:
       - name: Run unit and integration tests
         run: just test
 
-#  test-e2e:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
-#
-#      # Note: Rust is preinstalled on GitHub runners (example shows rustc 1.80.1, cargo 1.80.1 as of this commit)
-#      #      - name: Set up Rust
-#      #        uses: dtolnay/rust-toolchain@stable
-#      - name: Check Rust version
-#        run: |
-#          echo "Installed rustc version:"
-#          rustc --version
-#          echo "Installed cargo version:"
-#          cargo --version
-#
-#      - name: Check Docker version
-#        run: |
-#          echo "Installed docker version:"
-#          docker --version
-#
-#      - name: Install Just
-#        uses: extractions/setup-just@v2
-#
-#      - name: Check Just version
-#        run: |
-#          echo "Installed just version:"
-#          just --version
-#
-#      - name: Install protoc
-#        uses: taiki-e/install-action@v2
-#        with:
-#          tool: protoc@3.28.0
-#
-#      - name: Check protoc version
-#        run: |
-#          echo "Installed protoc version:"
-#          protoc --version
-#
-#      - name: Install Cargo Lambda
-#        run: |
-#          pip3 install cargo-lambda
-#          echo "Installed cargo lambda version:"
-#          cargo lambda --version
-#
-#      - name: Run localstack detached
-#        run: |
-#          just localstack-start-detached
-#          echo "Started localstack container"
-#
-#      - name: Wait for LocalStack
-#        run: |
-#          while ! nc -z localhost 4566; do
-#            echo "Waiting for LocalStack to be ready..."
-#            sleep 1
-#          done
-#
-#      - name: Install AWS SAM LOCAL CLI
-#        run: |
-#          sudo apt-get update
-#          sudo apt-get install -y python3-pip
-#          pip3 install aws-sam-cli-local
-#          echo "Installed AWS SAM CLI version:"
-#          samlocal --version
-#
-#      - name: Run e2e tests; with deployment to localstack
-#        run: just test-e2e
-#
-#      - name: Stop and remove localstack container
-#        if: always()
-#        run: |
-#          just localstack-stop
-#          echo "Stopped and removed localstack container"
+  test-e2e:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Note: Rust is preinstalled on GitHub runners (example shows rustc 1.80.1, cargo 1.80.1 as of this commit)
+      #      - name: Set up Rust
+      #        uses: dtolnay/rust-toolchain@stable
+      - name: Check Rust version
+        run: |
+          echo "Installed rustc version:"
+          rustc --version
+          echo "Installed cargo version:"
+          cargo --version
+
+      - name: Check Docker version
+        run: |
+          echo "Installed docker version:"
+          docker --version
+
+      - name: Install Just
+        uses: extractions/setup-just@v2
+
+      - name: Check Just version
+        run: |
+          echo "Installed just version:"
+          just --version
+
+      - name: Install protoc
+        uses: taiki-e/install-action@v2
+        with:
+          tool: protoc@3.28.0
+
+      - name: Check protoc version
+        run: |
+          echo "Installed protoc version:"
+          protoc --version
+
+      - name: Install Cargo Lambda
+        run: |
+          pip3 install cargo-lambda
+          echo "Installed cargo lambda version:"
+          cargo lambda --version
+
+      - name: Run localstack detached
+        run: |
+          just localstack-start-detached
+          echo "Started localstack container"
+
+      - name: Wait for LocalStack
+        run: |
+          while ! nc -z localhost 4566; do
+            echo "Waiting for LocalStack to be ready..."
+            sleep 1
+          done
+
+      - name: Install AWS SAM LOCAL CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install aws-sam-cli-local
+          echo "Installed AWS SAM CLI version:"
+          samlocal --version
+
+      - name: Run e2e tests; with deployment to localstack
+        env:
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          AWS_DEFAULT_REGION: us-west-2
+        run: just test-e2e
+
+      - name: Stop and remove localstack container
+        if: always()
+        run: |
+          just localstack-stop
+          echo "Stopped and removed localstack container"
 
 #  deploy:
 #    runs-on: ubuntu-latest
