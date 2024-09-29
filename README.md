@@ -21,7 +21,7 @@
 - [Development Tool: LocalStack](#development-tool-localstack)
 - [Clean And Build](#clean-and-build)
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
-- [Current System Design](#current-system-design)
+- [DriveDeposits System Design: Integrated Microservices Architecture](#drivedeposits-system-design-integrated-microservices-architecture)
 - [Member crates in workspace](#member-crates-in-workspace)
 
 ### Domain Driven Terminology:
@@ -514,7 +514,7 @@ AWS deployments.
 
 [Back to Table of Contents](#table-of-contents)
 
-### Current System Design
+### DriveDeposits System Design: Integrated Microservices Architecture
 
 ![DriveDeposits.drawio.svg](DriveDeposits.drawio.svg)
 
