@@ -1,4 +1,4 @@
-## DriveDeposits: A Robust Financial System with Delta Growth Analysis, Powered by a Scalable Rust Backend (Synchronous & Asynchronous)
+## DriveDeposits: A Robust Financial Microservices System with Delta Growth Analysis, Powered by a Scalable Rust Backend (Server-based & Serverless, Synchronous & Asynchronous)
 
 <img src="DriveDeposits-Rust.png" alt="DriveDeposits" width="256" height="256" style="border-radius: 10%; vertical-align: middle;">
 
@@ -6,10 +6,10 @@
 
 - [Domain Driven Terminology](#domain-driven-terminology)
 - [DriveDeposits: Architectural Pillars](#drivedeposits-architectural-pillars)
-- [Synchronous Components](#synchronous-components)
-- [Asynchronous Components](#asynchronous-components)
-- [Bridging Synchronous and Asynchronous Components In DriveDeposits](#bridging-synchronous-and-asynchronous-components-in-drivedeposits)
-- [Deployment](#deployment)
+- [Synchronous Microservices Components](#synchronous-microservices-components)
+- [Asynchronous Microservices Components](#asynchronous-microservices-components)
+- [Bridging Synchronous and Asynchronous Components In DriveDeposits Microservices](#bridging-synchronous-and-asynchronous-components-in-drivedeposits-microservices)
+- [Deployment of DriveDeposits Microservices](#deployment-of-drivedeposits-microservices)
 - [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
 - [Running Tests](#running-tests)
     - [Integration tests](#integration-tests)
@@ -158,74 +158,75 @@ curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-de
 
 ### DriveDeposits: Architectural Pillars
 
-* **Event-Driven Architecture:** Built on AWS EventBridge and EventBus, DriveDeposits ensures seamless communication and
-  real-time data processing for dynamic financial calculations.
-* **Scalable and Reliable:** AWS Lambda scales automatically to handle fluctuating workloads, ensuring consistent
-  performance and availability.
-* **Rust-Powered Performance:** Built with Rust, DriveDeposits benefits from the language's renowned speed, safety, and
-  concurrency, resulting in a highly efficient and reliable system.
-* **AWS Rust SDK Integration:** DriveDeposits leverages the official AWS SDK for Rust to interact seamlessly with
-  essential AWS services. This includes using the Lambda runtime for serverless function execution and DynamoDB for
-  efficient and scalable data storage and retrieval.
-* **High-Performance Computing:**  gRPC (Tonic) provides blazing-fast communication between services, while REST (Axum)
-  offers a user-friendly API gateway for external integrations.
-* **Seamless Integration:** DriveDeposits integrates seamlessly with essential AWS services like CloudWatch for
-  monitoring based on EventBridge Rules.
-* **Tokio-Powered Concurrency:** DriveDeposits leverages Tokio's powerful concurrency primitives to manage asynchronous
-  tasks efficiently. This includes sending events to AWS EventBridge for further
-  processing and analysis, ensuring a responsive and non-blocking system.
-* **SAM Deployment:** The serverless components in this project are deployed using AWS Serverless Application Model (
-  SAM). This includes AWS Lambda functions for writer and reader, as well as DynamoDB and EventBridge rules.
+* **Microservices Architecture:** DriveDeposits is built on a robust microservices foundation, combining both
+  server-based and serverless components for maximum flexibility and scalability.
+* **Server-based Microservices:** Utilizing gRPC (Tonic) and REST (Axum) for high-performance, inter-service
+  communication and external API access.
+* **Serverless Microservices:** Leveraging AWS Lambda for auto-scaling, event-driven processing of financial
+  calculations and data management. This includes a sophisticated query system using AWS API Gateway + Lambda API
+  allowing efficient querying of portfolio, bank, and deposit data at various levels.
+* **Event-Driven Architecture:** Built on AWS EventBridge and EventBus, ensuring seamless communication and real-time
+  data processing for dynamic financial calculations.
+* **Rust-Powered Performance:** Benefiting from Rust's renowned speed, safety, and concurrency features for a highly
+  efficient and reliable system.
+* **AWS Rust SDK Integration:** Seamless interaction with AWS services, including Lambda runtime for serverless
+  execution and DynamoDB for scalable data storage and retrieval.
+* **Tokio-Powered Concurrency:** Efficient management of asynchronous tasks, including event processing with AWS
+  EventBridge.
+* **SAM Deployment:** Serverless components deployed using AWS Serverless Application Model (SAM), streamlining the
+  deployment of Lambda functions, DynamoDB, and EventBridge rules.
 
-**DriveDeposits offers a powerful and flexible solution for:**
+**DriveDeposits offers a powerful and flexible microservices solution for:**
 
-* **Financial institutions** looking to modernize their calculation infrastructure.
-* **FinTech companies** seeking a scalable and reliable platform for real-time financial data processing.
-* **Developers** building innovative financial applications that demand high performance and reliability.
+* **Financial institutions** modernizing their calculation infrastructure.
+* **FinTech companies** seeking a scalable, reliable platform for real-time financial data processing.
+* **Developers** building high-performance, innovative financial applications.
 
-**Experience the future of financial calculations with DriveDeposits!**
-Documentation for Drive Deposits is work in progress. More details will be added.
+**Experience the future of microservices-based financial calculations with DriveDeposits!**
+Documentation for Drive Deposits is a work in progress. More details will be added.
 
 [Back to Table of Contents](#table-of-contents)
 
-### Synchronous Components
+### Synchronous Microservices Components
 
 - Using ***Axum***:
-    - AWS Serverless Lambda Reader (routes for querying data)
+    - Serverless Microservice: AWS Lambda Reader (routes for querying data)
         - With AWS API Gateway
-    - REST Gateway Server
+    - Server-Based Microservice: REST Gateway
 
 - Using ***Tonic***
-    - gRPC Server
+    - Server-based Microservice: gRPC Server
 
 [Back to Table of Contents](#table-of-contents)
 
-### Asynchronous Components
+### Asynchronous Microservices Components
 
 - using ***Tokio***
-    - Asynchronous Tasks
+    - Asynchronous Tasks to Send Events to EventBridge
 
 - Using the ***AWS SDK for Rust*** for:
-    - AWS Serverless Lambda Writer
-    - DynamoDB
-    - EventBridge
+    - Serverless Microservice: AWS Lambda Writer
+    - AWS DynamoDB Integration
+    - AWS EventBridge Integration
 
 [Back to Table of Contents](#table-of-contents)
 
-### Bridging Synchronous and Asynchronous Components In DriveDeposits
+### Bridging Synchronous and Asynchronous Components In DriveDeposits Microservices
 
-DriveDeposits is a cutting-edge financial calculation platform built on a robust architecture that combines synchronous
-and asynchronous components. The synchronous gRPC server utilizes Tokio to asynchronously send events to the EventBridge
-service, seamlessly integrating with the asynchronous components of the system.
-The gRPC server spawns asynchronous Tokio tasks to send events to
-EventBridge, bridging the synchronous and asynchronous parts of the architecture.
+DriveDeposits is a cutting-edge financial calculation platform built on a robust microservices architecture that
+combines synchronous and asynchronous components. The synchronous gRPC server microservice utilizes Tokio to
+asynchronously send events to the EventBridge service, seamlessly integrating with the asynchronous microservices
+components of the system.
 
-Lambda Reader with Axum Endpoints component serves as a serverless API built with AWS Lambda and the Axum web framework
-in Rust. It provides a set of endpoints to query and retrieve financial data from a DynamoDB table. The endpoints are
-designed to fetch data at different levels of granularity, such as portfolios, banks, and deposits, based on specific
-criteria like delta growth or maturity date.
+The gRPC server microservice spawns asynchronous Tokio tasks to send events to EventBridge, effectively bridging the
+synchronous and asynchronous parts of the architecture.
 
-The main functionalities include:
+The Lambda Reader with Axum Endpoints component serves as a serverless microservice API built with AWS Lambda and the
+Axum web framework in Rust. This microservice provides a set of endpoints to query and retrieve financial data from a
+DynamoDB table. The endpoints are designed to fetch data at different levels of granularity, such as portfolios, banks,
+and deposits, based on specific criteria like delta growth or maturity date.
+
+The main functionalities of this microservice include:
 
 - **Portfolio Level Endpoint**: Retrieves a list of portfolios based on the delta growth criteria.
 - **Bank Level Endpoint**: Fetches a list of banks for a given portfolio UUID, sorted by the delta growth criteria.
@@ -233,68 +234,72 @@ The main functionalities include:
     - **Delta Growth**: Retrieves a list of deposits for a given portfolio UUID, sorted by the delta growth criteria.
     - **Maturity Date**: Fetches a list of deposits for a given portfolio UUID, sorted by the maturity date.
 
-The Lambda function interacts with an AWS DynamoDB table to read and query the required data. It utilizes
-the `aws-sdk-rust` crate to communicate with the DynamoDB service. The Axum web framework is used to define the API
-routes and handle HTTP requests and responses.
+This serverless microservice interacts with an AWS DynamoDB table to read and query the required data. It utilizes the
+`aws-sdk-rust` crate to communicate with the DynamoDB service. The Axum web framework is used to define the API routes
+and handle HTTP requests and responses, making it a highly efficient and scalable component of the DriveDeposits
+microservices ecosystem.
 
 [Back to Table of Contents](#table-of-contents)
 
-### Deployment
+### Deployment of DriveDeposits Microservices
 
-This project uses SAM (Serverless Application Model) for deploying the following AWS resources:
+This project uses SAM (Serverless Application Model) for deploying the following AWS resources that support our
+microservices architecture:
 
 - EventBridge
 - EventBus
 - Targets (including CloudWatch Log group)
-- Lambda function
+- Lambda functions (for serverless microservices)
 - DynamoDB table
 
 The SAM-based deployment streamlines the process of setting up and managing these AWS services for the DriveDeposits
-application.
+microservices application.
 
-This project also utilizes the [Justfile](https://github.com/casey/just) for managing project-level recipes.
+This project also utilizes the [Justfile](https://github.com/casey/just) for managing project-level recipes and
+microservices deployment tasks.
 
-#### deploy everything -- aws deployment related commands for EventBridge, EventBus, Cloudwatch log groups and Lambda target function for writing to DynamoDB and Lambda DynamoDB reader
+#### Deploy all serverless microservices and AWS resources
 
 `just deploy-drive-deposits-dynamodb-queries`
 
-calls dependent recipes - deploys [event bus and then event rules with lambda target] and then lambda function for
-queries
+This command calls dependent recipes to deploy the entire microservices ecosystem, including the event bus, event rules
+with lambda targets, and lambda functions for queries.
 
-#### delete everything -- aws deployment related commands for EventBridge, EventBus, Cloudwatch log groups and Lambda target function for writing to DynamoDB and Lambda DynamoDB reader
+#### Delete all serverless microservices and AWS resources
 
 `just deployed-delete-drive-deposits-event-bus`
 
-calls dependent recipes - deletes (event rule with lambda target and then event bus) and then queries from dependent
-recipes (with deployed-delete-drive-deposits-dynamodb-queries)
+This command calls dependent recipes to delete all deployed microservices and resources, including event rules, lambda
+targets, event bus, and query-related resources.
 
-#### create aws deployment related commands for EventBridge, EventBus, Cloudwatch log groups and Lambda Write DynamoDB function
+#### Deploy event bridge with event rules and target lambda microservices components
 
 `just deploy-drive-deposits-event-rules`
 
-calls dependent recipe and also creates event bus from dependent recipe
+This command deploys the event-driven components of our microservices architecture, including EventBridge, EventBus, and
+related resources.
 
-#### AWS Deployment for Lambda Function with API Gateway and Lambda DynamoDB Reader
+#### Deploy Lambda Function with API Gateway and DynamoDB Reader microservices components
 
 `just deploy-drive-deposits-dynamodb-queries-only`
 
-#### Run REST gateway and gRPC Servers
+#### Run server-based microservices (REST gateway and gRPC Servers)
 
 `just run-drive-deposits-grpc-server`
-
 `just run-drive-deposits-rest-grpc-gateway-server`
 
-#### Send http request to rest gateway server
+#### Test microservices integration
 
-This sends the full Portfolio request body to the REST gateway server that sends the request to the gRPC server. The
-gRPC server then performs calculations and sends calculation events to AWS EventBridge with targets for log groups, and
-a Lambda function connected to DynamoDB.
+Send an HTTP request to the REST gateway server, which communicates with other microservices:
 
 `just post-calculate-portfolio-valid`
 
-Follow up with [Data population](#data-population) section to see how to query the data.
+This command tests the full microservices pipeline, from the REST gateway to the gRPC server, through to AWS EventBridge
+and Lambda functions.
 
-#### Command for AWS Lambda Invoke Check Directly
+Follow up with the [Data population](#data-population) section to see how to query data across the microservices.
+
+#### Test AWS Lambda microservice directly
 
 `just aws-invoke-drive-deposits-event-rules-lambda`
 
