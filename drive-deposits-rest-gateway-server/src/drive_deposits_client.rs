@@ -52,7 +52,7 @@ pub async fn calculate_portfolio(
         )
     });
 
-    let client = DriveDepositsServiceClient::connect("http://[::1]:50052")
+    let client = DriveDepositsServiceClient::connect("http://[::]:50052")
         .await
         .inspect_err(|err| {
             span.in_scope(|| error!("grpc client connection error: {:?}", err));

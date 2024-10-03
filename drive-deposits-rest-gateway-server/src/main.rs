@@ -35,7 +35,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let span = tracing::span!(tracing::Level::INFO, "server");
     // run it
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
     let listening_on = listener.local_addr()?;
     span.in_scope(|| info!("listening on {}", listening_on));
     axum::serve(listener, app_router).await?;

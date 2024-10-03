@@ -19,7 +19,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let span = info_span!("main");
     let app = app().instrument(span.clone()).await?;
-    let addr = "[::1]:50052".parse().unwrap();
+    let addr = "[::]:50052".parse().unwrap();
 
     span.in_scope(|| info!("gRPC server running! on {}", addr));
     let serve_result = app.serve(addr).instrument(info_span!("server")).await;

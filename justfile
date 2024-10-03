@@ -339,6 +339,10 @@ localstack-run-drive-deposits-check-cmd-valid-send-events-lesser-amount-investme
 localstack-run-drive-deposits-check-cmd-valid-send-events-greater-amount-investments:
     USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo ddcheck -- drive-deposits-rest-gateway-server/data/portfolio_request_valid_greater_amount_investments.json
 
+# running grpc server to send event to localstack just in case needed
+localstack-run-drive-deposits-grpc-server:
+    USE_LOCALSTACK="true" SEND_CAL_EVENTS="true" cargo run --package drive-deposits-grpc-server --bin drive-deposits-grpc-server
+
 # localstack watch
 # .cargo/config.toml has USE_LOCALSTACK = "false" so we can overrride it here as needed
 localstack-watch-run-drive-deposits-check-cmd-valid-send-events:
@@ -353,8 +357,6 @@ localstack-logs-drive-deposits-event-rules-lambda:
 # localstack clean automatically happens on shutodwn since localstack by default is ephemeral
 localstack-clean-build-drive-deposit-event-rules:clean-build-drive-deposit-event-rules
     echo "localstack cleaned build drive-deposit-event-rules"
-
-
 
 # rest gateway server curl POST commands to send calculation events to target through RESRT and gRPC servers  -- same as in request.http at drive-deposits-rest-gateway-server/request.http
 # however had to exclude br since in curl not directly supported in curl verison 8.7.1
