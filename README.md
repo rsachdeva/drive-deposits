@@ -1,4 +1,8 @@
-## DriveDeposits: A Robust Financial Microservices System with Delta Growth Analysis, Powered by a Scalable Rust Backend (Server-based & Serverless, Synchronous & Asynchronous)
+## DriveDeposits: A Robust Financial Microservices System with Delta Growth Analysis, Powered by a Scalable Rust Backend.
+
+[![CI Pipeline](https://github.com/rsachdeva/drive-deposits/actions/workflows/rust.yml/badge.svg)](https://github.com/rsachdeva/drive-deposits/actions/workflows/rust.yml)
+
+### Server-based & Serverless: Utilizes request-response blocking and sends events using async Rust for non-blocking, event-driven temporal decoupling, supporting both synchronous and asynchronous operations.
 
 <img src="DriveDeposits-Rust.png" alt="DriveDeposits" width="256" height="256" style="border-radius: 10%; vertical-align: middle;">
 
@@ -6,6 +10,7 @@
 
 - [Domain Driven Terminology](#domain-driven-terminology)
 - [DriveDeposits: Architectural Pillars](#drivedeposits-architectural-pillars)
+- [DriveDeposits System Design: Integrated Microservices Architecture](#drivedeposits-system-design-integrated-microservices-architecture)
 - [Synchronous Microservices Components](#synchronous-microservices-components)
 - [Asynchronous Microservices Components](#asynchronous-microservices-components)
 - [Bridging Synchronous and Asynchronous Components In DriveDeposits Microservices](#bridging-synchronous-and-asynchronous-components-in-drivedeposits-microservices)
@@ -21,7 +26,6 @@
 - [Development Tool: LocalStack](#development-tool-localstack)
 - [Clean And Build](#clean-and-build)
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
-- [DriveDeposits System Design: Integrated Microservices Architecture](#drivedeposits-system-design-integrated-microservices-architecture)
 - [Member crates in workspace](#member-crates-in-workspace)
 
 ### Domain Driven Terminology:
@@ -184,6 +188,12 @@ curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-de
 
 **Experience the future of microservices-based financial calculations with DriveDeposits!**
 Documentation for Drive Deposits is a work in progress. More details will be added.
+
+[Back to Table of Contents](#table-of-contents)
+
+### DriveDeposits System Design: Integrated Microservices Architecture
+
+![DriveDeposits Design](DriveDeposits.drawio.svg)
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -511,12 +521,6 @@ The project uses custom configurations defined in `.cargo/config.toml`:
 
 These configurations allow for flexible development and testing environments, enabling easy switching between local and
 AWS deployments.
-
-[Back to Table of Contents](#table-of-contents)
-
-### DriveDeposits System Design: Integrated Microservices Architecture
-
-![DriveDeposits.drawio.svg](DriveDeposits.drawio.svg)
 
 [Back to Table of Contents](#table-of-contents)
 
