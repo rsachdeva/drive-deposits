@@ -1,5 +1,6 @@
 use axum::{async_trait, Json};
 use mockall::automock;
+use std::env::var;
 use tracing::{debug, debug_span, error, info};
 
 use app_error::Error as AppError;
@@ -52,7 +53,11 @@ pub async fn calculate_portfolio(
         )
     });
 
-    let client = DriveDepositsServiceClient::connect("http://[::]:50052")
+    // for docker compose dns GRPC_SERVER_ADDRESS=http://drive-deposits-grpc-server:50052
+    let grpc_server_address =
+        var("GRPC_SERVER_ADDRESS").unwrap_or_else(|_| "http://[::]:50052".to_string());
+    info!("grpc_server_address is: {}", grpc_server_address);
+    let client = DriveDepositsServiceClient::connect(grpc_server_address)
         .await
         .inspect_err(|err| {
             span.in_scope(|| error!("grpc client connection error: {:?}", err));

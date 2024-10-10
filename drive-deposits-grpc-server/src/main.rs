@@ -9,11 +9,13 @@ use drive_deposits_grpc_server::service_router::app;
 async fn main() -> Result<(), Box<dyn Error>> {
     registry()
         .with(
-            EnvFilter::try_from_default_env()?, // added in .cargo/config.toml.add_directive("drive_deposits_grpc=debug".parse()?),
+            EnvFilter::try_from_default_env()
+                .inspect_err(|err| println!(" error err is {:?}", err))?, // added in .cargo/config.toml.add_directive("drive_deposits_grpc=debug".parse()?),
         )
         .with(tracing_subscriber::fmt::layer())
         .init();
 
+    println!("going to check RUST_LOG");
     let rust_log = std::env::var("RUST_LOG")?;
     println!("RUST_LOG is {}", rust_log);
 

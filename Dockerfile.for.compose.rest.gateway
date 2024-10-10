@@ -1,0 +1,80 @@
+# syntax=docker/dockerfile:1
+
+ARG RUST_VERSION=1.81.0
+ARG APP_NAME=drive-deposits-rest-gateway-server
+
+################################################################################
+# Create a stage for building the application.
+
+FROM rust:${RUST_VERSION}-alpine AS build
+ARG APP_NAME
+# not used as we are using a bind mount with absolute path
+WORKDIR /drive-deposits
+
+# Install host build dependencies.
+RUN apk add --no-cache clang lld musl-dev git
+
+RUN apk add --no-cache protobuf-dev
+
+
+# Build the application.
+# Mounting for caching dependencies and build artifacts
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/local/cargo/git/db \
+    --mount=type=cache,target=/tmp/cargo-target \
+    --mount=type=bind,source=.,target=/tmp/build \
+    set -x && \
+    ls -la /drive-deposits && \
+    cd /tmp/build && \
+    mkdir -p /tmp/cargo-target && \
+    CARGO_TARGET_DIR=/tmp/cargo-target cargo build --package $APP_NAME --locked --release && \
+    echo "Contents of /tmp/cargo-target/release/ directory:" && \
+    ls -la /tmp/cargo-target/release/ && \
+    if [ -f /tmp/cargo-target/release/$APP_NAME ]; then \
+        mkdir -p /bin/server && \
+        cp /tmp/cargo-target/release/$APP_NAME /bin/server/$APP_NAME && \
+        echo "Contents of /bin/server directory:" && \
+        ls -la /bin/server; \
+    else \
+        echo "Binary $APP_NAME not found in /tmp/cargo-target/release/"; \
+        exit 1; \
+    fi
+
+#################################################################################
+# Create a new stage for running the application
+# could use distroless
+# FROM gcr.io/distroless/cc-debian11
+# or slim
+# FROM debian:buster-slim
+# this is docker init by default
+FROM alpine:3.18 AS final
+
+WORKDIR /bin
+
+# Create a non-privileged user that the app will run under.
+# See https://docs.docker.com/go/dockerfile-user-best-practices/
+ARG UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    appuser
+USER appuser
+
+WORKDIR /bin
+
+COPY --from=build /bin/server/$APP_NAME .
+
+RUN echo "Contents of workdir /bin directory for drive-deposits-rest-gateway-server in final:" && \
+    ls -la /bin
+
+EXPOSE 3000
+
+ENV RUST_LOG="drive_deposits_rest_types=debug,drive_deposits_proto_grpc_types=debug,drive_deposits_rest_gateway_server=debug"
+
+ENV GRPC_SERVER_ADDRESS="http://drive-deposits-grpc-server:50052"
+
+CMD ["/bin/drive-deposits-rest-gateway-server"]

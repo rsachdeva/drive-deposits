@@ -14,7 +14,7 @@
 - [Synchronous Microservices Components](#synchronous-microservices-components)
 - [Asynchronous Microservices Components](#asynchronous-microservices-components)
 - [Bridging Synchronous and Asynchronous Components In DriveDeposits Microservices](#bridging-synchronous-and-asynchronous-components-in-drivedeposits-microservices)
-- [Deployment of DriveDeposits Microservices](#deployment-of-drivedeposits-microservices)
+- [Deployment of Microservices](#deployment-of-microservices)
 - [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
 - [Running Tests](#running-tests)
     - [Integration tests](#integration-tests)
@@ -251,16 +251,18 @@ microservices ecosystem.
 
 [Back to Table of Contents](#table-of-contents)
 
-### Deployment of DriveDeposits Microservices
+### Deployment of Microservices
+
+- **Serverless**: AWS using SAM
 
 This project uses SAM (Serverless Application Model) for deploying the following AWS resources that support our
 microservices architecture:
 
-- EventBridge
-- EventBus
-- Targets (including CloudWatch Log group)
-- Lambda functions (for serverless microservices)
-- DynamoDB table
+    * EventBridge
+    * EventBus
+    * Targets (including CloudWatch Log group)
+    * Lambda functions (for serverless microservices)
+    * DynamoDB table
 
 The SAM-based deployment streamlines the process of setting up and managing these AWS services for the DriveDeposits
 microservices application.
@@ -293,10 +295,18 @@ related resources.
 
 `just deploy-drive-deposits-dynamodb-queries-only`
 
-#### Run server-based microservices (REST gateway and gRPC Servers)
+- **Server-based**:
+    - **Natively** (without Docker)
 
-`just run-drive-deposits-grpc-server`
-`just run-drive-deposits-rest-grpc-gateway-server`
+      `just run-drive-deposits-grpc-server`
+
+      `just run-drive-deposits-rest-grpc-gateway-server`
+
+    - **Docker Compose**
+
+      `just compose-up-grpc-server`
+
+      `just compose-up-rest-server`
 
 #### Test microservices integration
 
@@ -444,7 +454,7 @@ Following is convenience so that in development can iterate faster:
 
 Should see "Ready." -- There is a Terminal now in Docker Desktop itself so that is a good place to run this command.
 
-#### deploy everything in localstack -- aws deployment related commands for EventBridge, EventBus, Cloudwatch log groups and Lambda target function for writing to DynamoDB and Lambda DynamoDB reader
+#### deploy everything serverless in Localstack - aws deployment related commands for EventBridge, EventBus, Cloudwatch log groups and Lambda target function for writing to DynamoDB and Lambda DynamoDB reader
 
 `just localstack-deploy-drive-deposits-dynamodb-queries`
 

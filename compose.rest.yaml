@@ -1,0 +1,14 @@
+services:
+  drive-deposits-rest-gateway-server:
+    build:
+      context: .
+      target: final
+      dockerfile: Dockerfile.for.compose.rest.gateway
+    ports:
+      - "3000:3000"
+    networks:
+      - drive-deposits-network
+
+networks:
+  drive-deposits-network:
+    driver: bridge

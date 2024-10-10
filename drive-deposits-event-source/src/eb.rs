@@ -55,7 +55,9 @@ fn env_var_bool(name: &str) -> bool {
 
 #[instrument]
 fn use_localstack() -> bool {
-    env_var_bool("USE_LOCALSTACK")
+    let use_local = env_var_bool("USE_LOCALSTACK");
+    debug!("use_localstack based on USE_LOCALSTACK: {}", use_local);
+    use_local
 }
 
 #[instrument]

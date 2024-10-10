@@ -1,0 +1,18 @@
+services:
+  drive-deposits-grpc-server:
+    build:
+      context: .
+      target: final
+      dockerfile: Dockerfile.for.compose.grpc
+    ports:
+      - "50052:50052"
+    networks:
+      - drive-deposits-network
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+
+networks:
+  drive-deposits-network:
+    driver: bridge

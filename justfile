@@ -623,6 +623,36 @@ get-query-by-level-for-deposits-maturity-date:
     curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-deposits/maturity-date?order=asc&top_k=3' \
         | jq
 
+
+# docker compose for local
+# for server-based grpc and rest servers
+compose-build-grpc-server:
+    docker compose --progress=plain -f compose.grpc.yaml build
+
+compose-build-rest-server:
+    docker compose --progress=plain -f compose.rest.yaml build
+
+compose-up-grpc-server:compose-build-grpc-server
+    docker compose --progress=plain -f compose.grpc.yaml up
+
+compose-up-rest-server:compose-build-rest-server
+    docker compose --progress=plain -f compose.rest.yaml up
+
+compose-build-grpc-server-no-cache:
+    docker compose --progress=plain -f compose.grpc.yaml build --no-cache
+
+compose-build-rest-server-no-cache:
+    docker compose --progress=plain -f compose.rest.yaml build --no-cache
+
+compose-up-grpc-server-no-cache:compose-build-grpc-server-no-cache
+    docker compose --progress=plain -f compose.grpc.yaml up
+
+compose-up-rest-server-no-cache:compose-build-rest-server-no-cache
+    docker compose --progress=plain -f compose.rest.yaml up
+
+docker-prune:
+    docker system prune -a
+
 # for git release tags
 git-tag-add-local TAG:
     git tag -a {{TAG}} -m "Release version {{TAG}}"
