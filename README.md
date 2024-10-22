@@ -8,9 +8,9 @@
 
 ## Table of Contents
 
+- [DriveDeposits System Design: Integrated Microservices Architecture](#drivedeposits-system-design-integrated-microservices-architecture)
 - [Domain Driven Terminology](#domain-driven-terminology)
 - [DriveDeposits: Architectural Pillars](#drivedeposits-architectural-pillars)
-- [DriveDeposits System Design: Integrated Microservices Architecture](#drivedeposits-system-design-integrated-microservices-architecture)
 - [Synchronous Microservices Components](#synchronous-microservices-components)
 - [Asynchronous Microservices Components](#asynchronous-microservices-components)
 - [Bridging Synchronous and Asynchronous Components In DriveDeposits Microservices](#bridging-synchronous-and-asynchronous-components-in-drivedeposits-microservices)
@@ -27,6 +27,12 @@
 - [Clean And Build](#clean-and-build)
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
 - [Member crates in workspace](#member-crates-in-workspace)
+
+### DriveDeposits System Design: Integrated Microservices Architecture
+
+![DriveDeposits Design](DriveDeposits.drawio.svg)
+
+[Back to Table of Contents](#table-of-contents)
 
 ### Domain Driven Terminology:
 
@@ -188,12 +194,6 @@ curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-de
 
 **Experience the future of microservices-based financial calculations with DriveDeposits!**
 Documentation for Drive Deposits is a work in progress. More details will be added.
-
-[Back to Table of Contents](#table-of-contents)
-
-### DriveDeposits System Design: Integrated Microservices Architecture
-
-![DriveDeposits Design](DriveDeposits.drawio.svg)
 
 [Back to Table of Contents](#table-of-contents)
 
