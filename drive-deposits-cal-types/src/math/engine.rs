@@ -111,6 +111,22 @@ async fn build_from_new_bank(
     Ok(bank_with_outcome)
 }
 
+// The code doesn't need Mutex here because it's using immutable shared state with Arc, and there's no mutable state that needs protection. Here's why:
+//
+// The new_delta is wrapped in Arc and only shared for reading across multiple tasks
+// Each task gets its own clone of the Arc, but they're only reading the data
+// The code creates new data structures (deposits, banks, etc.) rather than modifying existing ones
+// The JoinSet pattern used creates independent tasks that don't share mutable state
+// All mutations happen on locally owned data within each task's scope
+// This is an example of Rust's ownership system working with Arc to safely share immutable data across concurrent tasks without needing additional synchronization primitives like Mutex.
+// The design follows Rust's principle of "share memory by communicating" through message passing patterns, where each task works with its own data and communicates results back through the JoinSet.
+// Arc is still necessary here despite the read-only nature of the data because:
+//
+// The data needs to be shared across different async tasks that run independently and may outlive the original scope
+// The tasks are spawned onto different threads in the tokio runtime, particularly with spawn_blocking and JoinSet
+// Rust's lifetime system alone cannot guarantee the data will live long enough across thread boundaries
+// Arc provides the thread-safe reference counting needed for the data to remain valid across these concurrent task boundaries
+// The code in build_from_new_banks and build_from_new_bank specifically requires Arc because it moves data into multiple spawned tasks that run concurrently on different threads. Simple references, even when cloned, wouldn't be sufficient here as Rust needs static lifetime guarantees for cross-thread data sharing.
 async fn build_from_new_banks(
     new_banks: Vec<NewBank>,
     new_delta: Arc<NewDelta>,
