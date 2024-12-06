@@ -295,6 +295,8 @@ related resources.
 
 `just deploy-drive-deposits-dynamodb-queries-only`
 
+#### Run the REST and gRPC servers for synchronous microservices with and without Docker
+
 - **Server-based**:
     - **Natively** (without Docker)
 
