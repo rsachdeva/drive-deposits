@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drive-deposits-rest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drive-deposits-rest
+  template:
+    metadata:
+      labels:
+        app: drive-deposits-rest
+    spec:
+      containers:
+        - name: drive-deposits-rest
+          image: drive-deposits-rest-gateway-server:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          env:
+            - name: RUST_LOG
+              value: "drive_deposits_rest_types=debug,drive_deposits_proto_grpc_types=debug,drive_deposits_rest_gateway_server=debug"
+            - name: GRPC_SERVER_ADDRESS
+              value: "http://drive-deposits-grpc:50052"
+            - name: K8S_DEPLOYMENT
+              value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drive-deposits-rest
+spec:
+  selector:
+    app: drive-deposits-rest
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drive-deposits-rest-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: api.drivedeposits.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: drive-deposits-rest
+                port:
+                  number: 3000

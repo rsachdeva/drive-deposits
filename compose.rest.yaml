@@ -3,7 +3,7 @@ services:
     build:
       context: .
       target: final
-      dockerfile: Dockerfile.for.compose.rest.gateway
+      dockerfile: Dockerfile.rest.gateway
     ports:
       - "3000:3000"
     networks:

@@ -3,7 +3,7 @@ services:
     build:
       context: .
       target: final
-      dockerfile: Dockerfile.for.compose.grpc
+      dockerfile: Dockerfile.grpc
     ports:
       - "50052:50052"
     networks:

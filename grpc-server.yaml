@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drive-deposits-grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drive-deposits-grpc
+  template:
+    metadata:
+      labels:
+        app: drive-deposits-grpc
+    spec:
+      containers:
+        - name: drive-deposits-grpc
+          image: drive-deposits-grpc-server:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 50052
+          env:
+            - name: RUST_LOG
+              value: "drive_deposits_rest_types=debug,drive_deposits_proto_grpc_types=debug,drive_deposits_event_source=debug,drive_deposits_cal_types=debug,drive_deposits_grpc_server=debug"
+            - name: SEND_CAL_EVENTS
+              value: "true"
+            - name: USE_LOCALSTACK
+              value: "false"
+            - name: AWS_ACCESS_KEY_ID
+              value: "${AWS_ACCESS_KEY_ID}"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "${AWS_SECRET_ACCESS_KEY}"
+            - name: AWS_DEFAULT_REGION
+              value: "${AWS_DEFAULT_REGION}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drive-deposits-grpc
+spec:
+  selector:
+    app: drive-deposits-grpc
+  ports:
+    - protocol: TCP
+      port: 50052
+      targetPort: 50052
+  type: ClusterIP

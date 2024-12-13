@@ -141,8 +141,7 @@ pub fn puts_event_failed_entry_count(
         return Err(DriveDepositsEventBridgeError::FailedEntryCountError(
             format!(
                 "{} for sending events to event bridge detail type {}",
-                put_events_output.failed_entry_count.to_string(),
-                level
+                put_events_output.failed_entry_count, level
             ),
         ));
     }

@@ -310,6 +310,25 @@ related resources.
 
       `just compose-up-rest-server`
 
+    - **Kubernetes** (It uses local images to show k8s for local)
+
+      First install the nginx-ingress controller:
+        ```bash
+        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
+        ```
+      Add the domain to your /etc/hosts:
+        ```bash
+         echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
+        ```
+
+      Deploy the services:
+      ```bash
+      just k8s-grpc-server
+      just k8s-rest-server
+      ```
+
+      The REST API will now be accessible at http://api.drivedeposits.local
+
 #### Test microservices integration
 
 Send an HTTP request to the REST gateway server, which communicates with other microservices:

@@ -672,6 +672,21 @@ compose-up-rest-server-no-cache: compose-build-rest-server-no-cache
 docker-prune:
     docker system prune -a
 
+# k8s for local -- uses local images
+k8s-grpc-server:
+    docker build -t drive-deposits-grpc-server:latest -f Dockerfile.grpc . && \
+    kubectl apply -f k8s/grpc-server.yaml
+
+k8s-grpc-server-delete:
+    kubectl delete -f k8s/grpc-server.yaml
+
+k8s-rest-server:
+    docker build -t drive-deposits-rest-server:latest -f Dockerfile.rest . && \
+    kubectl apply -f k8s/rest-server.yaml
+
+k8s-rest-server-delete:
+    kubectl delete -f k8s/rest-server.yaml
+
 # for git release tags
 git-tag-add-local TAG:
     git tag -a {{ TAG }} -m "Release version {{ TAG }}"
