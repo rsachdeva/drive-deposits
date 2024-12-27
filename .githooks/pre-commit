@@ -1,0 +1,29 @@
+#!/bin/bash
+echo "Running pre-commit checks..."
+
+# Check formatting
+echo "Checking formatting..."
+cargo fmt --quiet -- --check
+if [ $? -ne 0 ]; then
+    echo "Formatting check failed. Please run 'cargo fmt' to fix"
+    exit 1
+fi
+
+# Run clippy
+echo "Running clippy..."
+cargo clippy --quiet -- -D warnings
+if [ $? -ne 0 ]; then
+    echo "Clippy check failed. Please fix the warnings"
+    exit 1
+fi
+
+# Compile check
+echo "Checking compilation..."
+cargo check --quiet
+if [ $? -ne 0 ]; then
+    echo "Compilation failed"
+    exit 1
+fi
+
+echo "All pre-commit checks passed!"
+exit 0

@@ -1,9 +1,4 @@
-use rust_decimal::Decimal;
-use tracing::debug;
-use uuid::Uuid;
-
-use drive_deposits_proto_grpc_types::generated::AccountType;
-
+use crate::math::accumulator::Accumulator;
 use crate::{
     cal_types::{
         Bank, Delta, Deposit, Maturity, NewDelta, NewDeposit, Outcome, OutcomeWithDates,
@@ -18,7 +13,10 @@ use crate::{
         total::compute as compute_total,
     },
 };
-use crate::math::accumulator::Accumulator;
+use drive_deposits_proto_grpc_types::generated::AccountType;
+use rust_decimal::Decimal;
+use tracing::debug;
+use uuid::Uuid;
 
 fn outcome_with_growth(
     new_deposit: &NewDeposit,
