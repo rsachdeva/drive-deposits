@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: drive-deposits-rest
-          image: drive-deposits-rest-gateway-server:latest
+          image: k8s-drive-deposits-rest-gateway-server:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 3000

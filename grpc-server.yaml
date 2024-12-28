@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: drive-deposits-grpc
-          image: drive-deposits-grpc-server:latest
+          image: k8s-drive-deposits-grpc-server:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 50052
