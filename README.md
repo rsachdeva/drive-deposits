@@ -8,7 +8,7 @@
 
 ## Table of Contents
 
-- [DriveDeposits System Design: Integrated Microservices Architecture with Quick Demos](#drivedeposits-system-design-integrated-microservices-architecture-with-quick-demos)
+- [DriveDeposits System Design and Microservices Architecture: Watch Ingestion and Query Workflows](#drivedeposits-system-design-and-microservices-architecture-watch-ingestion-and-query-workflows)
 - [Domain Driven Terminology](#domain-driven-terminology)
 - [DriveDeposits: Architectural Pillars](#drivedeposits-architectural-pillars)
 - [Synchronous Microservices Components](#synchronous-microservices-components)
@@ -28,13 +28,31 @@
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
 - [Member crates in workspace](#member-crates-in-workspace)
 
-### DriveDeposits System Design: Integrated Microservices Architecture with Quick Demos
+### DriveDeposits System Design and Microservices Architecture: Watch Ingestion and Query Workflows
 
 ![DriveDeposits Design](DriveDeposits.drawio.svg)
 
-#### You can watch the quick demos video online.
+#### You can watch the quick videos online listed by workflow
 
-##### [Ingestion Demo: pre-just-post-calculate-portfolio-valid](https://vimeo.com/1042543651)
+#### Ingestion Workflow Videos
+
+##### Valid Portfolio Request
+
+##### [![Valid portfolio request](media/valid-portfolio-request.png)](https://vimeo.com/1042543651)
+
+##### Portfolio request and response
+
+##### [![Portfolio request and response](media/portfolio-request-and-response.png)](https://vimeo.com/1042543661)
+
+#### Query Workflow Videos
+
+#### [Query API Retrieves a list of portfolios based on the delta growth criteria retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending order](https://vimeo.com/1042543613)
+
+#### [Query API Retrieves a list of banks for a portfolio based on the delta growth criteria retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending order](https://vimeo.com/1042543640)
+
+#### [Query API Retrieves a list of deposits for a portfolio based on the delta growth criteria retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending order](https://vimeo.com/1042543632)
+
+#### [Query API Retrieves a list of deposits for a portfolio based on the maturity date criteria retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending order](https://vimeo.com/1042543620)
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -138,8 +156,9 @@ domain-specific language in both design and development:
       ```
 
 
-* **Sorting Capabilities with Top K Based on Delta Growth:** DriveDeposits allows sorting based on delta growth,
-  retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending
+* **Sorting Capabilities with Top K Based on Delta Growth:** DriveDeposits allows sorting based on delta growth by
+  portfolio, bank and deposits level and maturity date at deposits level retrieving the top 'k' items (where 'k' is the
+  number defined by the user in the query) in ascending or descending
   order. For example:
 
 ```curl
