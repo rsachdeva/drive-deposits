@@ -378,6 +378,21 @@ Add the domain to your /etc/hosts:
   echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
   ```
 
+Create AWS credentials secret for the gRPC server:
+
+```bash
+kubectl create secret generic aws-credentials \
+  --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+```
+
+To verify the secret:
+
+```bash
+kubectl get secret aws-credentials -o json
+```
+
 Deploy the services:
 
   ```bash
