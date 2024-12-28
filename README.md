@@ -153,6 +153,10 @@ curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-de
         | jq
 ```
 
+The sort key in DynamoDB combines delta growth and created_at timestamp as a composite value, ensuring consistent
+ordering through DynamoDB's native sorting capabilities. When delta growth values match exactly between portfolios, the
+created_at portion of the sort key determines their relative position in ascending or descending order.
+
 * **Maturity date:** The date when a deposit or investment reaches its full value or the end of its term.
 * **Sorting capabilities with top_k based on maturity date:** DriveDeposits allows sorting by maturity date,
   retrieving the top 'k' deposits (where 'k' is the number defined by the user in the query) in ascending or descending
@@ -295,7 +299,7 @@ related resources.
 
 `just deploy-drive-deposits-dynamodb-queries-only`
 
-- **Server-based**: Run the REST and gRPC servers with and without Docker Composer and Kubernetes
+- **Server-based**: Run the REST and gRPC servers Natively, With Docker Compose Or Kubernetes!
     - **Natively** (without Docker)
 
       `just run-drive-deposits-grpc-server`
@@ -311,96 +315,96 @@ related resources.
 
       `just compose-up-rest-server`
 
-- **Kubernetes** (It uses local images to show k8s for local)
-  Install and start Colima with Kubernetes enabled:
-  ```bash
-  brew install colima
-  colima start --cpu 2 --memory 4 --kubernetes
-  ```
-  When you run colima start --kubernetes, Colima automatically:
+    - **Kubernetes** (It uses local images to show k8s for local)
+      Install and start Colima with Kubernetes enabled:
+      ```bash
+      brew install colima
+      colima start --cpu 2 --memory 4 --kubernetes
+      ```
+      When you run colima start --kubernetes, Colima automatically:
 
-  Creates a new Docker context named "colima"
-  Creates a new Kubernetes context
-  Sets both contexts as current/active
-  Updates ~/.docker/config.json for Docker context
-  Updates ~/.kube/config for Kubernetes context
+      Creates a new Docker context named "colima"
+      Creates a new Kubernetes context
+      Sets both contexts as current/active
+      Updates ~/.docker/config.json for Docker context
+      Updates ~/.kube/config for Kubernetes context
 
-- List all available Docker and Kubernetes contexts:
-  ```bash
-  docker context list
-  kubectl config get-contexts
-  ```
+      List all available Docker and Kubernetes contexts:
+      ```bash
+      docker context list
+      kubectl config get-contexts
+      ```
 
-  Verify your Docker and Kubernetes context:
-  ```bash
-  docker context show
-  kubectl config current-context
-  ```
-  Docker also stores context information in ~/.docker/config.json and Kubernetes stores context information in ~
-  /.kube/config.
+          Verify your Docker and Kubernetes context:
+          ```bash
+          docker context show
+          kubectl config current-context
+          ```
+          Docker also stores context information in ~/.docker/config.json and Kubernetes stores context information in ~
+          /.kube/config.
 
-  You can always switch back to Colima's context when needed using:
-  ```bash
-  docker context use colima
-  kubectl config use-context colima
-  ```
+          You can always switch back to Colima's context when needed using:
+          ```bash
+          docker context use colima
+          kubectl config use-context colima
+          ```
 
-Install Helm if not already installed:
+      Install Helm if not already installed:
 
-  ```bash
-  brew install helm
-  ```
+          ```bash
+          brew install helm
+          ```
 
-Add and update the nginx-ingress Helm repository:
+      Add and update the nginx-ingress Helm repository:
 
-  ```bash
-  helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-  helm repo update
-  helm repo list
-  ```
+          ```bash
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          helm repo list
+          ```
 
-Install the nginx-ingress controller:
+      Install the nginx-ingress controller:
 
-  ```bash
-  helm install ingress-nginx ingress-nginx/ingress-nginx
-  ```
+          ```bash
+          helm install ingress-nginx ingress-nginx/ingress-nginx
+          ```
 
-Monitor the nginx ingress controller logs:
+      Monitor the nginx ingress controller logs:
 
-  ```bash
-  kubectl logs -l app.kubernetes.io/name=ingress-nginx -f
-  ```
+          ```bash
+          kubectl logs -l app.kubernetes.io/name=ingress-nginx -f
+          ```
 
-Only if using ingress controller:
-Add the domain to your /etc/hosts:
+      Only if using ingress controller:
+      Add the domain to your /etc/hosts:
 
-  ```bash
-  echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
-  ```
+          ```bash
+          echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
+          ```
 
-Create AWS credentials secret for the gRPC server:
+      Create AWS credentials secret for the gRPC server:
 
-```bash
-kubectl create secret generic aws-credentials \
-  --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-  --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-  --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
-```
+        ```bash
+        kubectl create secret generic aws-credentials \
+          --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+          --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+          --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+        ```
 
-To verify the secret:
+      To verify the secret:
 
-```bash
-kubectl get secret aws-credentials -o json
-```
+        ```bash
+        kubectl get secret aws-credentials -o json
+        ```
 
-Deploy the services:
+      Deploy the services:
 
-  ```bash
-  just k8s-grpc-server
-  just k8s-rest-server
-  ```
+          ```bash
+          just k8s-grpc-server
+          just k8s-rest-server
+          ```
 
-The REST API will now be accessible at http://api.drivedeposits.local
+      The REST API will now be accessible at http://api.drivedeposits.local
 
 #### Test microservices integration
 

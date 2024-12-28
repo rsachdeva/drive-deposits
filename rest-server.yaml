@@ -42,7 +42,7 @@ kind: Ingress
 metadata:
   name: drive-deposits-rest-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    #    nginx.ingress.kubernetes.io/rewrite-target: /
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
@@ -50,6 +50,13 @@ spec:
       http:
         paths:
           - path: /api/drive-deposits/calculate-portfolio
+            pathType: Exact
+            backend:
+              service:
+                name: drive-deposits-rest
+                port:
+                  number: 3000
+          - path: /
             pathType: Exact
             backend:
               service:
