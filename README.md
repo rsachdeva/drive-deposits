@@ -674,4 +674,4 @@ maintaining their individual identities within the Rust ecosystem.
 
 [Back to Table of Contents](#table-of-contents)
 
-[Copyright (c) 2024 Rohit Sachdeva](LICENSE)
+[Copyright (c) 2024-2025 Rohit Sachdeva](LICENSE)
