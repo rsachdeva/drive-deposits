@@ -685,7 +685,7 @@ k8s-grpc-server-delete:
     kubectl delete -f grpc-server.yaml
 
 k8s-rest-server:
-    docker build -t k8s-drive-deposits-rest-gateway-server:latest -f Dockerfile.rest . && \
+    docker build -t k8s-drive-deposits-rest-gateway-server:latest -f Dockerfile.rest.gateway . && \
     kubectl apply -f rest-server.yaml
 
 k8s-rest-server-delete:

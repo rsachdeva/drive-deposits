@@ -23,8 +23,6 @@ spec:
               value: "drive_deposits_rest_types=debug,drive_deposits_proto_grpc_types=debug,drive_deposits_rest_gateway_server=debug"
             - name: GRPC_SERVER_ADDRESS
               value: "http://drive-deposits-grpc:50052"
-            - name: K8S_DEPLOYMENT
-              value: "true"
 ---
 apiVersion: v1
 kind: Service
