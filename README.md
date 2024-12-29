@@ -25,10 +25,10 @@
 - [Asynchronous Microservices Components](#asynchronous-microservices-components)
 - [Bridging Synchronous and Asynchronous Components In DriveDeposits Microservices](#bridging-synchronous-and-asynchronous-components-in-drivedeposits-microservices)
 - [Deployment of Microservices](#deployment-of-microservices)
-    - Serverless: AWS using SAM which uses CloudFormation under the
-      hood[#serverless-aws-using-sam-which-uses-cloudformation-under-the-hood]
-    - Server-based: Run the REST and gRPC servers Natively, With Docker Compose And
-      Kubernetes![#server-based-run-the-rest-and-grpc-servers-natively-with-docker-compose-and-kubernetes]
+    - [Serverless: AWS using SAM which uses CloudFormation under the hood](#serverless-aws-using-sam-which-uses-cloudformation-under-the-hood)
+    - [Server-based: Run the REST and gRPC servers Natively, With Docker Compose And Kubernetes!](#server-based-run-the-rest-and-grpc-servers-natively-with-docker-compose-and-kubernetes)
+    - [Test microservices integration](#test-microservices-integration)
+    - [Test AWS Lambda microservice directly](#test-aws-lambda-microservice-directly)
 - [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
 - [Running Tests](#running-tests)
     - [Integration tests](#integration-tests)
@@ -296,7 +296,7 @@ microservices ecosystem.
 
 ### Deployment of Microservices
 
-- Serverless: AWS using SAM which uses CloudFormation under the hood
+#### Serverless: AWS using SAM which uses CloudFormation under the hood
 
 This project uses SAM (Serverless Application Model) for deploying the following AWS resources that support our
 microservices architecture:
@@ -313,146 +313,156 @@ microservices application.
 This project also utilizes the [Justfile](https://github.com/casey/just) for managing project-level recipes and
 microservices deployment tasks.
 
-#### Deploy all serverless microservices and AWS resources
+- **Deploy all serverless microservices and AWS resources**
 
 `just deploy-drive-deposits-dynamodb-queries`
 
 This command calls dependent recipes to deploy the entire microservices ecosystem, including the event bus, event rules
 with lambda targets, and lambda functions for queries.
 
-#### Delete all serverless microservices and AWS resources
+- **Delete all serverless microservices and AWS resources**
 
 `just deployed-delete-drive-deposits-event-bus`
 
 This command calls dependent recipes to delete all deployed microservices and resources, including event rules, lambda
 targets, event bus, and query-related resources.
 
-#### Deploy event bridge with event rules and target lambda microservices components
+- **Deploy event bridge with event rules and target lambda microservices components**
 
 `just deploy-drive-deposits-event-rules`
 
 This command deploys the event-driven components of our microservices architecture, including EventBridge, EventBus, and
 related resources.
 
-#### Deploy Lambda Function with API Gateway and DynamoDB Reader microservices components
+- **Deploy Lambda Function with API Gateway and DynamoDB Reader microservices components**
 
 `just deploy-drive-deposits-dynamodb-queries-only`
 
-- Server-based: Run the REST and gRPC servers Natively, With Docker Compose And Kubernetes!
-    - **Natively** (without Docker)
+#### Server-based: Run the REST and gRPC servers Natively, With Docker Compose And Kubernetes!
 
-      `just run-drive-deposits-grpc-server`
+- **Natively** (without Docker)
 
-      `just run-drive-deposits-rest-grpc-gateway-server`
+  `just run-drive-deposits-grpc-server`
 
-    - **Docker Compose**
-      Start Docker Desktop first.
+  `just run-drive-deposits-rest-grpc-gateway-server`
 
-      Then run:
+- **Docker Compose**
+  Start Docker Desktop first.
 
-      `just compose-up-grpc-server`
+  Then run:
 
-      `just compose-up-rest-server`
+  `just compose-up-grpc-server`
 
-    - **Kubernetes** (It uses local images to show k8s for local)
-      Install and start Colima with Kubernetes enabled:
+  `just compose-up-rest-server`
+
+- **Kubernetes** (It uses local images to show k8s for local)
+  Install and start Colima with Kubernetes enabled:
+  ```bash
+  brew install colima
+  colima start --cpu 2 --memory 4 --kubernetes
+  ```
+  When you run colima start --kubernetes, Colima automatically:
+
+  Creates a new Docker context named "colima"
+  Creates a new Kubernetes context
+  Sets both contexts as current/active
+  Updates ~/.docker/config.json for Docker context
+  Updates ~/.kube/config for Kubernetes context
+
+  List all available Docker and Kubernetes contexts:
+  ```bash
+  docker context list
+  kubectl config get-contexts
+  ```
+
+      Verify your Docker and Kubernetes context:
       ```bash
-      brew install colima
-      colima start --cpu 2 --memory 4 --kubernetes
+      docker context show
+      kubectl config current-context
       ```
-      When you run colima start --kubernetes, Colima automatically:
+      Docker also stores context information in ~/.docker/config.json and Kubernetes stores context information in ~
+      /.kube/config.
 
-      Creates a new Docker context named "colima"
-      Creates a new Kubernetes context
-      Sets both contexts as current/active
-      Updates ~/.docker/config.json for Docker context
-      Updates ~/.kube/config for Kubernetes context
-
-      List all available Docker and Kubernetes contexts:
+      You can always switch back to Colima's context when needed using:
       ```bash
-      docker context list
-      kubectl config get-contexts
+      docker context use colima
+      kubectl config use-context colima
       ```
 
-          Verify your Docker and Kubernetes context:
-          ```bash
-          docker context show
-          kubectl config current-context
-          ```
-          Docker also stores context information in ~/.docker/config.json and Kubernetes stores context information in ~
-          /.kube/config.
+  Install Helm if not already installed:
 
-          You can always switch back to Colima's context when needed using:
-          ```bash
-          docker context use colima
-          kubectl config use-context colima
-          ```
+      ```bash
+      brew install helm
+      ```
 
-      Install Helm if not already installed:
+  Add and update the nginx-ingress Helm repository:
 
-          ```bash
-          brew install helm
-          ```
+      ```bash
+      helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+      helm repo update
+      helm repo list
+      ```
 
-      Add and update the nginx-ingress Helm repository:
+  Install the nginx-ingress controller:
 
-          ```bash
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-          helm repo update
-          helm repo list
-          ```
+      ```bash
+      helm install ingress-nginx ingress-nginx/ingress-nginx
+      ```
 
-      Install the nginx-ingress controller:
+  Monitor the nginx ingress controller logs:
 
-          ```bash
-          helm install ingress-nginx ingress-nginx/ingress-nginx
-          ```
+      ```bash
+      kubectl logs -l app.kubernetes.io/name=ingress-nginx -f
+      ```
 
-      Monitor the nginx ingress controller logs:
+  Only if using ingress controller:
+  Add the domain to your /etc/hosts:
 
-          ```bash
-          kubectl logs -l app.kubernetes.io/name=ingress-nginx -f
-          ```
+      ```bash
+      echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
+      ```
 
-      Only if using ingress controller:
-      Add the domain to your /etc/hosts:
+  Create AWS credentials secret for the gRPC server:
 
-          ```bash
-          echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
-          ```
+    ```bash
+    kubectl create secret generic aws-credentials \
+      --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+      --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+      --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+    ```
 
-      Create AWS credentials secret for the gRPC server:
+  To verify the secret:
 
-        ```bash
-        kubectl create secret generic aws-credentials \
-          --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-          --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-          --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
-        ```
+    ```bash
+    kubectl get secret aws-credentials -o json
+    ```
 
-      To verify the secret:
+  Deploy the services:
 
-        ```bash
-        kubectl get secret aws-credentials -o json
-        ```
+      ```bash
+      just k8s-grpc-server
+      just k8s-rest-server
+      ```
 
-      Deploy the services:
-
-          ```bash
-          just k8s-grpc-server
-          just k8s-rest-server
-          ```
-
-      The REST API will now be accessible at http://api.drivedeposits.local
+  The REST API will now be accessible at http://api.drivedeposits.local
 
 #### Test microservices integration
 
 In justfile set
+
 for native and docker-compose:
+
+```justfile
 rest_gateway_server_host := "http://localhost:3000"
+```
+
 And
+
 for k8s with ingress:
+
+```justfile
 rest_gateway_server_host := "http://api.drivedeposits.local"
+```
 
 Send an HTTP request to the REST gateway server, which communicates with other microservices:
 
@@ -517,11 +527,8 @@ This streamlined approach significantly enhances development efficiency and syst
 
 #### AWS Populated with Basic Data for Queries Lambda
 
-##### Using REST gateway and gRPC Servers: start
-
-`just run-drive-deposits-grpc-server`
-
-`just run-drive-deposits-rest-grpc-gateway-server`
+See [Deployment of Microservices](#deployment-of-microservices) section for deploying the microservices and AWS
+resources.
 
 ##### send curl post requests to populate
 
