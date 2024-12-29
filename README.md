@@ -8,29 +8,69 @@
 
 ## Table of Contents
 
-- [DriveDeposits System Design: Integrated Microservices Architecture](#drivedeposits-system-design-integrated-microservices-architecture)
+- [DriveDeposits System Design and Microservices Architecture: Watch Ingestion and Query Workflows](#drivedeposits-system-design-and-microservices-architecture-watch-ingestion-and-query-workflows)
+    - [System Design](#system-design)
+    - [Workflow Videos](#workflow-videos)
+        - [Ingestion Workflow Videos](#ingestion-workflow-videos)
+            - [Valid Portfolio Request](#valid-portfolio-request)
+            - [Portfolio request and response](#portfolio-request-and-response)
+        - [Query Workflow Videos](#query-workflow-videos)
+            - [Query API Retrieves a list of portfolios based on the delta growth criteria](#query-api-retrieves-a-list-of-portfolios-based-on-the-delta-growth-criteria)
+            - [Query API Retrieves a list of banks for a portfolio based on the delta growth criteria](#query-api-retrieves-a-list-of-banks-for-a-portfolio-based-on-the-delta-growth-criteria)
+            - [Query API Retrieves a list of deposits for a portfolio based on the delta growth criteria](#query-api-retrieves-a-list-of-deposits-for-a-portfolio-based-on-the-delta-growth-criteria)
+            - [Query API Retrieves a list of deposits for a portfolio based on the maturity date criteria](#query-api-retrieves-a-list-of-deposits-for-a-portfolio-based-on-the-maturity-date-criteria)
 - [Domain Driven Terminology](#domain-driven-terminology)
 - [DriveDeposits: Architectural Pillars](#drivedeposits-architectural-pillars)
 - [Synchronous Microservices Components](#synchronous-microservices-components)
 - [Asynchronous Microservices Components](#asynchronous-microservices-components)
 - [Bridging Synchronous and Asynchronous Components In DriveDeposits Microservices](#bridging-synchronous-and-asynchronous-components-in-drivedeposits-microservices)
 - [Deployment of Microservices](#deployment-of-microservices)
-- [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
+    - [Serverless: AWS using SAM which uses CloudFormation under the hood](#serverless-aws-using-sam-which-uses-cloudformation-under-the-hood)
+    - [Server-based: Run the REST and gRPC servers Natively, With Docker Compose And Kubernetes!](#server-based-run-the-rest-and-grpc-servers-natively-with-docker-compose-and-kubernetes)
+    - [Test microservices integration](#test-microservices-integration)
+    - [Test AWS Lambda microservice directly](#test-aws-lambda-microservice-directly)
+    - [Data population](#data-population)
+    - [Querying with custom domain](#querying-with-custom-domain)
 - [Running Tests](#running-tests)
     - [Integration tests](#integration-tests)
     - [Unit and Integration tests](#unit-and-integration-tests)
     - [End-to-End tests](#end-to-end-tests)
-- [Data population](#data-population)
-- [Querying with custom domain](#querying-with-custom-domain)
+    - [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
+        - [Efficient Command for Synchronous Calculation Flow and Asynchronous AWS Serverless Event Testing](#efficient-command-for-synchronous-calculation-flow-and-asynchronous-aws-serverless-event-testing)
+        - [Alias](#alias)
 - [Development Tool: cargo lambda](#development-tool-cargo-lambda)
 - [Development Tool: LocalStack](#development-tool-localstack)
 - [Clean And Build](#clean-and-build)
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
 - [Member crates in workspace](#member-crates-in-workspace)
 
-### DriveDeposits System Design: Integrated Microservices Architecture
+### DriveDeposits System Design and Microservices Architecture: Watch Ingestion and Query Workflows
+
+#### System Design
 
 ![DriveDeposits Design](DriveDeposits.drawio.svg)
+
+#### Workflow Videos
+
+#### Ingestion Workflow Videos
+
+##### Valid Portfolio Request
+
+##### [![Valid portfolio request](media/valid-portfolio-request.png)](https://vimeo.com/1042543651)
+
+##### Portfolio request and response
+
+##### [![Portfolio request and response](media/portfolio-request-and-response.png)](https://vimeo.com/1042543661)
+
+#### Query Workflow Videos
+
+#### [Query API Retrieves a list of portfolios based on the delta growth criteria](https://vimeo.com/1042543613)
+
+#### [Query API Retrieves a list of banks for a portfolio based on the delta growth criteria](https://vimeo.com/1042543640)
+
+#### [Query API Retrieves a list of deposits for a portfolio based on the delta growth criteria](https://vimeo.com/1042543632)
+
+#### [Query API Retrieves a list of deposits for a portfolio based on the maturity date criteria](https://vimeo.com/1042543620)
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -134,8 +174,9 @@ domain-specific language in both design and development:
       ```
 
 
-* **Sorting Capabilities with Top K Based on Delta Growth:** DriveDeposits allows sorting based on delta growth,
-  retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending
+* **Sorting Capabilities with Top K Based on Delta Growth:** DriveDeposits allows sorting based on delta growth by
+  portfolio, bank and deposits level and maturity date at deposits level retrieving the top 'k' items (where 'k' is the
+  number defined by the user in the query) in ascending or descending
   order. For example:
 
 ```curl
@@ -257,7 +298,7 @@ microservices ecosystem.
 
 ### Deployment of Microservices
 
-- **Serverless**: AWS using SAM which uses CloudFormation under the hood
+#### Serverless: AWS using SAM which uses CloudFormation under the hood
 
 This project uses SAM (Serverless Application Model) for deploying the following AWS resources that support our
 microservices architecture:
@@ -274,146 +315,162 @@ microservices application.
 This project also utilizes the [Justfile](https://github.com/casey/just) for managing project-level recipes and
 microservices deployment tasks.
 
-#### Deploy all serverless microservices and AWS resources
+- **Deploy all serverless microservices and AWS resources**
 
 `just deploy-drive-deposits-dynamodb-queries`
 
 This command calls dependent recipes to deploy the entire microservices ecosystem, including the event bus, event rules
 with lambda targets, and lambda functions for queries.
 
-#### Delete all serverless microservices and AWS resources
+- **Delete all serverless microservices and AWS resources**
 
 `just deployed-delete-drive-deposits-event-bus`
 
 This command calls dependent recipes to delete all deployed microservices and resources, including event rules, lambda
 targets, event bus, and query-related resources.
 
-#### Deploy event bridge with event rules and target lambda microservices components
+- **Deploy event bridge with event rules and target lambda microservices components**
 
 `just deploy-drive-deposits-event-rules`
 
 This command deploys the event-driven components of our microservices architecture, including EventBridge, EventBus, and
 related resources.
 
-#### Deploy Lambda Function with API Gateway and DynamoDB Reader microservices components
+- **Deploy Lambda Function with API Gateway and DynamoDB Reader microservices components**
 
 `just deploy-drive-deposits-dynamodb-queries-only`
 
-- **Server-based**: Run the REST and gRPC servers Natively, With Docker Compose Or Kubernetes!
-    - **Natively** (without Docker)
+#### Server-based: Run the REST and gRPC servers Natively, With Docker Compose And Kubernetes!
 
-      `just run-drive-deposits-grpc-server`
+- **Natively** (without Docker)
 
-      `just run-drive-deposits-rest-grpc-gateway-server`
+`just run-drive-deposits-grpc-server`
 
-    - **Docker Compose**
-      Start Docker Desktop first.
+`just run-drive-deposits-rest-grpc-gateway-server`
 
-      Then run:
+- **Docker Compose**
+  Start Docker Desktop first.
 
-      `just compose-up-grpc-server`
+Then run:
 
-      `just compose-up-rest-server`
+`just compose-up-grpc-server`
 
-    - **Kubernetes** (It uses local images to show k8s for local)
-      Install and start Colima with Kubernetes enabled:
-      ```bash
-      brew install colima
-      colima start --cpu 2 --memory 4 --kubernetes
-      ```
-      When you run colima start --kubernetes, Colima automatically:
+`just compose-up-rest-server`
 
-      Creates a new Docker context named "colima"
-      Creates a new Kubernetes context
-      Sets both contexts as current/active
-      Updates ~/.docker/config.json for Docker context
-      Updates ~/.kube/config for Kubernetes context
+- **Kubernetes** (It uses local images to show k8s for local)
+  Install and start Colima with Kubernetes enabled:
 
-      List all available Docker and Kubernetes contexts:
-      ```bash
-      docker context list
-      kubectl config get-contexts
-      ```
+```bash
+brew install colima
+colima start --cpu 2 --memory 4 --kubernetes
+```
 
-          Verify your Docker and Kubernetes context:
-          ```bash
-          docker context show
-          kubectl config current-context
-          ```
-          Docker also stores context information in ~/.docker/config.json and Kubernetes stores context information in ~
-          /.kube/config.
+When you run colima start --kubernetes, Colima automatically:
 
-          You can always switch back to Colima's context when needed using:
-          ```bash
-          docker context use colima
-          kubectl config use-context colima
-          ```
+Creates a new Docker context named "colima"
+Creates a new Kubernetes context
+Sets both contexts as current/active
+Updates ~/.docker/config.json for Docker context
+Updates ~/.kube/config for Kubernetes context
 
-      Install Helm if not already installed:
+List all available Docker and Kubernetes contexts:
 
-          ```bash
-          brew install helm
-          ```
+```bash
+docker context list
+kubectl config get-contexts
+```
 
-      Add and update the nginx-ingress Helm repository:
+Verify your Docker and Kubernetes context:
 
-          ```bash
-          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-          helm repo update
-          helm repo list
-          ```
+  ```bash
+  docker context show
+  kubectl config current-context
+  ```
 
-      Install the nginx-ingress controller:
+Docker also stores context information in ~/.docker/config.json and Kubernetes stores context information in ~
+/.kube/config.
 
-          ```bash
-          helm install ingress-nginx ingress-nginx/ingress-nginx
-          ```
+You can always switch back to Colima's context when needed using:
 
-      Monitor the nginx ingress controller logs:
+  ```bash
+  docker context use colima
+  kubectl config use-context colima
+  ```
 
-          ```bash
-          kubectl logs -l app.kubernetes.io/name=ingress-nginx -f
-          ```
+Install Helm if not already installed:
 
-      Only if using ingress controller:
-      Add the domain to your /etc/hosts:
+  ```bash
+  brew install helm
+  ```
 
-          ```bash
-          echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
-          ```
+Add and update the nginx-ingress Helm repository:
 
-      Create AWS credentials secret for the gRPC server:
+  ```bash
+  helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  helm repo update
+  helm repo list
+  ```
 
-        ```bash
-        kubectl create secret generic aws-credentials \
-          --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-          --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-          --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
-        ```
+Install the nginx-ingress controller:
 
-      To verify the secret:
+  ```bash
+  helm install ingress-nginx ingress-nginx/ingress-nginx
+  ```
 
-        ```bash
-        kubectl get secret aws-credentials -o json
-        ```
+Monitor the nginx ingress controller logs:
 
-      Deploy the services:
+  ```bash
+  kubectl logs -l app.kubernetes.io/name=ingress-nginx -f
+  ```
 
-          ```bash
-          just k8s-grpc-server
-          just k8s-rest-server
-          ```
+Only if using ingress controller:
+Add the domain to your /etc/hosts:
 
-      The REST API will now be accessible at http://api.drivedeposits.local
+  ```bash
+  echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
+  ```
+
+Create AWS credentials secret for the gRPC server:
+
+```bash
+kubectl create secret generic aws-credentials \
+  --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+```
+
+To verify the secret:
+
+```bash
+kubectl get secret aws-credentials -o json
+```
+
+Deploy the services:
+
+  ```bash
+  just k8s-grpc-server
+  just k8s-rest-server
+  ```
+
+The REST API will now be accessible at http://api.drivedeposits.local
 
 #### Test microservices integration
 
 In justfile set
+
 for native and docker-compose:
+
+```justfile
 rest_gateway_server_host := "http://localhost:3000"
+```
+
 And
+
 for k8s with ingress:
+
+```justfile
 rest_gateway_server_host := "http://api.drivedeposits.local"
+```
 
 Send an HTTP request to the REST gateway server, which communicates with other microservices:
 
@@ -428,63 +485,14 @@ Follow up with the [Data population](#data-population) section to see how to que
 
 `just aws-invoke-drive-deposits-event-rules-lambda`
 
-[Back to Table of Contents](#table-of-contents)
+#### Data population
 
-### Hybrid Integration Testing Tool
+##### AWS Populated with Basic Data for Queries Lambda
 
-#### Efficient Command for Synchronous Calculation Flow and Asynchronous AWS Serverless Event Testing
+See [Deployment of Microservices](#deployment-of-microservices) section for deploying the microservices and AWS
+resources.
 
-The command drive-deposits-check-cmd is a powerful hybrid integration testing tool that bridges both synchronous and
-asynchronous aspects of the system. It efficiently mimics the synchronous flow of REST and gRPC servers while
-interacting with asynchronous EventBridge components, all without the need for full server deployment.
-Key features:
-
-* Performs identical type transformations as REST and gRPC servers
-* Enables rapid calculation validation and event routing verification
-* Sends calculations to EventBridge for comprehensive sanity testing
-* Validates event routing to appropriate destinations (log groups, AWS Lambda functions, DynamoDB)
-* Allows developers to verify end-to-end flow of calculations, event handling, and data persistence
-
-Execute the tool with:
-
-`just run-drive-deposits-check-cmd-valid-send-events`
-
-This streamlined approach significantly enhances development efficiency and system reliability testing.
-
-###### Alias
-
-.cargo/config.toml has alias for command line [drive-deposits-check-cmd](drive-deposits-check-cmd) so can be run using
-`cargo ddcheck` For help see `cargo ddcheck -- --help`
-
-[Back to Table of Contents](#table-of-contents)
-
-### Running Tests
-
-##### Integration tests
-
-`just test-intg`
-
-##### Unit and Integration tests
-
-`just test`
-
-##### End-to-End tests
-
-`just test-e2e`
-
-[Back to Table of Contents](#table-of-contents)
-
-### Data population
-
-#### AWS Populated with Basic Data for Queries Lambda
-
-##### Using REST gateway and gRPC Servers: start
-
-`just run-drive-deposits-grpc-server`
-
-`just run-drive-deposits-rest-grpc-gateway-server`
-
-##### send curl post requests to populate
+###### send curl post requests to populate
 
 `just post-calculate-portfolio-valid`
 
@@ -492,13 +500,13 @@ This streamlined approach significantly enhances development efficiency and syst
 
 `just post-calculate-portfolio-valid-greater-amount`
 
-##### Alternatively, Using check command without servers
+###### Alternatively, Using check command without servers
 
 `just run-drive-deposits-check-cmd-valid-send-events`
 
 [Back to Table of Contents](#table-of-contents)
 
-### Querying with custom domain
+#### Querying with custom domain
 
 Successfully configured custom domain (https://api-queries.drivedeposits.drinnovations.us) for API Gateway so with some
 existing data queries can be tried
@@ -527,6 +535,48 @@ in [justfile](justfile). Adjusted `justfile` with a test portfolio UUID for quer
 `just get-query-by-level-for-deposits-delta-growth`
 
 `just get-query-by-level-for-deposits-maturity-date`
+
+[Back to Table of Contents](#table-of-contents)
+
+### Running Tests
+
+##### Integration tests
+
+`just test-intg`
+
+##### Unit and Integration tests
+
+`just test`
+
+##### End-to-End tests
+
+`just test-e2e`
+
+##### Hybrid Integration Testing Tool
+
+###### Efficient Command for Synchronous Calculation Flow and Asynchronous AWS Serverless Event Testing
+
+The command drive-deposits-check-cmd is a powerful hybrid integration testing tool that bridges both synchronous and
+asynchronous aspects of the system. It efficiently mimics the synchronous flow of REST and gRPC servers while
+interacting with asynchronous EventBridge components, all without the need for full server deployment.
+Key features:
+
+* Performs identical type transformations as REST and gRPC servers
+* Enables rapid calculation validation and event routing verification
+* Sends calculations to EventBridge for comprehensive sanity testing
+* Validates event routing to appropriate destinations (log groups, AWS Lambda functions, DynamoDB)
+* Allows developers to verify end-to-end flow of calculations, event handling, and data persistence
+
+Execute the tool with:
+
+`just run-drive-deposits-check-cmd-valid-send-events`
+
+This streamlined approach significantly enhances development efficiency and system reliability testing.
+
+###### Alias
+
+.cargo/config.toml has alias for command line [drive-deposits-check-cmd](drive-deposits-check-cmd) so can be run using
+`cargo ddcheck` For help see `cargo ddcheck -- --help`
 
 [Back to Table of Contents](#table-of-contents)
 
