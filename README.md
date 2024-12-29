@@ -29,13 +29,15 @@
     - [Server-based: Run the REST and gRPC servers Natively, With Docker Compose And Kubernetes!](#server-based-run-the-rest-and-grpc-servers-natively-with-docker-compose-and-kubernetes)
     - [Test microservices integration](#test-microservices-integration)
     - [Test AWS Lambda microservice directly](#test-aws-lambda-microservice-directly)
-- [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
+    - [Data population](#data-population)
+    - [Querying with custom domain](#querying-with-custom-domain)
 - [Running Tests](#running-tests)
     - [Integration tests](#integration-tests)
     - [Unit and Integration tests](#unit-and-integration-tests)
     - [End-to-End tests](#end-to-end-tests)
-- [Data population](#data-population)
-- [Querying with custom domain](#querying-with-custom-domain)
+    - [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
+        - [Efficient Command for Synchronous Calculation Flow and Asynchronous AWS Serverless Event Testing](#efficient-command-for-synchronous-calculation-flow-and-asynchronous-aws-serverless-event-testing)
+        - [Alias](#alias)
 - [Development Tool: cargo lambda](#development-tool-cargo-lambda)
 - [Development Tool: LocalStack](#development-tool-localstack)
 - [Clean And Build](#clean-and-build)
@@ -342,109 +344,115 @@ related resources.
 
 - **Natively** (without Docker)
 
-  `just run-drive-deposits-grpc-server`
+`just run-drive-deposits-grpc-server`
 
-  `just run-drive-deposits-rest-grpc-gateway-server`
+`just run-drive-deposits-rest-grpc-gateway-server`
 
 - **Docker Compose**
   Start Docker Desktop first.
 
-  Then run:
+Then run:
 
-  `just compose-up-grpc-server`
+`just compose-up-grpc-server`
 
-  `just compose-up-rest-server`
+`just compose-up-rest-server`
 
 - **Kubernetes** (It uses local images to show k8s for local)
   Install and start Colima with Kubernetes enabled:
+
+```bash
+brew install colima
+colima start --cpu 2 --memory 4 --kubernetes
+```
+
+When you run colima start --kubernetes, Colima automatically:
+
+Creates a new Docker context named "colima"
+Creates a new Kubernetes context
+Sets both contexts as current/active
+Updates ~/.docker/config.json for Docker context
+Updates ~/.kube/config for Kubernetes context
+
+List all available Docker and Kubernetes contexts:
+
+```bash
+docker context list
+kubectl config get-contexts
+```
+
+Verify your Docker and Kubernetes context:
+
   ```bash
-  brew install colima
-  colima start --cpu 2 --memory 4 --kubernetes
+  docker context show
+  kubectl config current-context
   ```
-  When you run colima start --kubernetes, Colima automatically:
 
-  Creates a new Docker context named "colima"
-  Creates a new Kubernetes context
-  Sets both contexts as current/active
-  Updates ~/.docker/config.json for Docker context
-  Updates ~/.kube/config for Kubernetes context
+Docker also stores context information in ~/.docker/config.json and Kubernetes stores context information in ~
+/.kube/config.
 
-  List all available Docker and Kubernetes contexts:
+You can always switch back to Colima's context when needed using:
+
   ```bash
-  docker context list
-  kubectl config get-contexts
+  docker context use colima
+  kubectl config use-context colima
   ```
 
-      Verify your Docker and Kubernetes context:
-      ```bash
-      docker context show
-      kubectl config current-context
-      ```
-      Docker also stores context information in ~/.docker/config.json and Kubernetes stores context information in ~
-      /.kube/config.
+Install Helm if not already installed:
 
-      You can always switch back to Colima's context when needed using:
-      ```bash
-      docker context use colima
-      kubectl config use-context colima
-      ```
+  ```bash
+  brew install helm
+  ```
 
-  Install Helm if not already installed:
+Add and update the nginx-ingress Helm repository:
 
-      ```bash
-      brew install helm
-      ```
+  ```bash
+  helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  helm repo update
+  helm repo list
+  ```
 
-  Add and update the nginx-ingress Helm repository:
+Install the nginx-ingress controller:
 
-      ```bash
-      helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-      helm repo update
-      helm repo list
-      ```
+  ```bash
+  helm install ingress-nginx ingress-nginx/ingress-nginx
+  ```
 
-  Install the nginx-ingress controller:
+Monitor the nginx ingress controller logs:
 
-      ```bash
-      helm install ingress-nginx ingress-nginx/ingress-nginx
-      ```
+  ```bash
+  kubectl logs -l app.kubernetes.io/name=ingress-nginx -f
+  ```
 
-  Monitor the nginx ingress controller logs:
+Only if using ingress controller:
+Add the domain to your /etc/hosts:
 
-      ```bash
-      kubectl logs -l app.kubernetes.io/name=ingress-nginx -f
-      ```
+  ```bash
+  echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
+  ```
 
-  Only if using ingress controller:
-  Add the domain to your /etc/hosts:
+Create AWS credentials secret for the gRPC server:
 
-      ```bash
-      echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
-      ```
+```bash
+kubectl create secret generic aws-credentials \
+  --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+```
 
-  Create AWS credentials secret for the gRPC server:
+To verify the secret:
 
-    ```bash
-    kubectl create secret generic aws-credentials \
-      --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-      --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-      --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
-    ```
+```bash
+kubectl get secret aws-credentials -o json
+```
 
-  To verify the secret:
+Deploy the services:
 
-    ```bash
-    kubectl get secret aws-credentials -o json
-    ```
+  ```bash
+  just k8s-grpc-server
+  just k8s-rest-server
+  ```
 
-  Deploy the services:
-
-      ```bash
-      just k8s-grpc-server
-      just k8s-rest-server
-      ```
-
-  The REST API will now be accessible at http://api.drivedeposits.local
+The REST API will now be accessible at http://api.drivedeposits.local
 
 #### Test microservices integration
 
@@ -477,60 +485,14 @@ Follow up with the [Data population](#data-population) section to see how to que
 
 `just aws-invoke-drive-deposits-event-rules-lambda`
 
-[Back to Table of Contents](#table-of-contents)
+#### Data population
 
-### Hybrid Integration Testing Tool
-
-#### Efficient Command for Synchronous Calculation Flow and Asynchronous AWS Serverless Event Testing
-
-The command drive-deposits-check-cmd is a powerful hybrid integration testing tool that bridges both synchronous and
-asynchronous aspects of the system. It efficiently mimics the synchronous flow of REST and gRPC servers while
-interacting with asynchronous EventBridge components, all without the need for full server deployment.
-Key features:
-
-* Performs identical type transformations as REST and gRPC servers
-* Enables rapid calculation validation and event routing verification
-* Sends calculations to EventBridge for comprehensive sanity testing
-* Validates event routing to appropriate destinations (log groups, AWS Lambda functions, DynamoDB)
-* Allows developers to verify end-to-end flow of calculations, event handling, and data persistence
-
-Execute the tool with:
-
-`just run-drive-deposits-check-cmd-valid-send-events`
-
-This streamlined approach significantly enhances development efficiency and system reliability testing.
-
-###### Alias
-
-.cargo/config.toml has alias for command line [drive-deposits-check-cmd](drive-deposits-check-cmd) so can be run using
-`cargo ddcheck` For help see `cargo ddcheck -- --help`
-
-[Back to Table of Contents](#table-of-contents)
-
-### Running Tests
-
-##### Integration tests
-
-`just test-intg`
-
-##### Unit and Integration tests
-
-`just test`
-
-##### End-to-End tests
-
-`just test-e2e`
-
-[Back to Table of Contents](#table-of-contents)
-
-### Data population
-
-#### AWS Populated with Basic Data for Queries Lambda
+##### AWS Populated with Basic Data for Queries Lambda
 
 See [Deployment of Microservices](#deployment-of-microservices) section for deploying the microservices and AWS
 resources.
 
-##### send curl post requests to populate
+###### send curl post requests to populate
 
 `just post-calculate-portfolio-valid`
 
@@ -538,13 +500,13 @@ resources.
 
 `just post-calculate-portfolio-valid-greater-amount`
 
-##### Alternatively, Using check command without servers
+###### Alternatively, Using check command without servers
 
 `just run-drive-deposits-check-cmd-valid-send-events`
 
 [Back to Table of Contents](#table-of-contents)
 
-### Querying with custom domain
+#### Querying with custom domain
 
 Successfully configured custom domain (https://api-queries.drivedeposits.drinnovations.us) for API Gateway so with some
 existing data queries can be tried
@@ -573,6 +535,48 @@ in [justfile](justfile). Adjusted `justfile` with a test portfolio UUID for quer
 `just get-query-by-level-for-deposits-delta-growth`
 
 `just get-query-by-level-for-deposits-maturity-date`
+
+[Back to Table of Contents](#table-of-contents)
+
+### Running Tests
+
+##### Integration tests
+
+`just test-intg`
+
+##### Unit and Integration tests
+
+`just test`
+
+##### End-to-End tests
+
+`just test-e2e`
+
+##### Hybrid Integration Testing Tool
+
+###### Efficient Command for Synchronous Calculation Flow and Asynchronous AWS Serverless Event Testing
+
+The command drive-deposits-check-cmd is a powerful hybrid integration testing tool that bridges both synchronous and
+asynchronous aspects of the system. It efficiently mimics the synchronous flow of REST and gRPC servers while
+interacting with asynchronous EventBridge components, all without the need for full server deployment.
+Key features:
+
+* Performs identical type transformations as REST and gRPC servers
+* Enables rapid calculation validation and event routing verification
+* Sends calculations to EventBridge for comprehensive sanity testing
+* Validates event routing to appropriate destinations (log groups, AWS Lambda functions, DynamoDB)
+* Allows developers to verify end-to-end flow of calculations, event handling, and data persistence
+
+Execute the tool with:
+
+`just run-drive-deposits-check-cmd-valid-send-events`
+
+This streamlined approach significantly enhances development efficiency and system reliability testing.
+
+###### Alias
+
+.cargo/config.toml has alias for command line [drive-deposits-check-cmd](drive-deposits-check-cmd) so can be run using
+`cargo ddcheck` For help see `cargo ddcheck -- --help`
 
 [Back to Table of Contents](#table-of-contents)
 
