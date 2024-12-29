@@ -699,10 +699,10 @@ git-tag-add-force-local TAG:
     git tag -a {{ TAG }} -f -m "Release version {{ TAG }}"
 
 git-tag-add-remote TAG:
-    git push origin {{ TAG }}
+    git push origin refs/tags/{{ TAG }}
 
 git-tag-add-force-remote TAG:
-    git push origin {{ TAG }} --force
+    git push origin refs/tags/{{ TAG }} --force
 
 git-tag-delete-local TAG:
     git tag -d {{ TAG }}
