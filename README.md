@@ -153,6 +153,10 @@ curl '{{aws_api_gateway_host}}/portfolios/{{aws_portfolio_uuid}}/by-level-for-de
         | jq
 ```
 
+The sort key in DynamoDB combines delta growth and created_at timestamp as a composite value, ensuring consistent
+ordering through DynamoDB's native sorting capabilities. When delta growth values match exactly between portfolios, the
+created_at portion of the sort key determines their relative position in ascending or descending order.
+
 * **Maturity date:** The date when a deposit or investment reaches its full value or the end of its term.
 * **Sorting capabilities with top_k based on maturity date:** DriveDeposits allows sorting by maturity date,
   retrieving the top 'k' deposits (where 'k' is the number defined by the user in the query) in ascending or descending
@@ -253,7 +257,7 @@ microservices ecosystem.
 
 ### Deployment of Microservices
 
-- **Serverless**: AWS using SAM
+- **Serverless**: AWS using SAM which uses CloudFormation under the hood
 
 This project uses SAM (Serverless Application Model) for deploying the following AWS resources that support our
 microservices architecture:
@@ -295,9 +299,7 @@ related resources.
 
 `just deploy-drive-deposits-dynamodb-queries-only`
 
-#### Run the REST and gRPC servers for synchronous microservices with and without Docker
-
-- **Server-based**:
+- **Server-based**: Run the REST and gRPC servers Natively, With Docker Compose Or Kubernetes!
     - **Natively** (without Docker)
 
       `just run-drive-deposits-grpc-server`
@@ -305,31 +307,113 @@ related resources.
       `just run-drive-deposits-rest-grpc-gateway-server`
 
     - **Docker Compose**
+      Start Docker Desktop first.
+
+      Then run:
 
       `just compose-up-grpc-server`
 
       `just compose-up-rest-server`
 
     - **Kubernetes** (It uses local images to show k8s for local)
+      Install and start Colima with Kubernetes enabled:
+      ```bash
+      brew install colima
+      colima start --cpu 2 --memory 4 --kubernetes
+      ```
+      When you run colima start --kubernetes, Colima automatically:
 
-      First install the nginx-ingress controller:
-        ```bash
-        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
-        ```
+      Creates a new Docker context named "colima"
+      Creates a new Kubernetes context
+      Sets both contexts as current/active
+      Updates ~/.docker/config.json for Docker context
+      Updates ~/.kube/config for Kubernetes context
+
+      List all available Docker and Kubernetes contexts:
+      ```bash
+      docker context list
+      kubectl config get-contexts
+      ```
+
+          Verify your Docker and Kubernetes context:
+          ```bash
+          docker context show
+          kubectl config current-context
+          ```
+          Docker also stores context information in ~/.docker/config.json and Kubernetes stores context information in ~
+          /.kube/config.
+
+          You can always switch back to Colima's context when needed using:
+          ```bash
+          docker context use colima
+          kubectl config use-context colima
+          ```
+
+      Install Helm if not already installed:
+
+          ```bash
+          brew install helm
+          ```
+
+      Add and update the nginx-ingress Helm repository:
+
+          ```bash
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          helm repo list
+          ```
+
+      Install the nginx-ingress controller:
+
+          ```bash
+          helm install ingress-nginx ingress-nginx/ingress-nginx
+          ```
+
+      Monitor the nginx ingress controller logs:
+
+          ```bash
+          kubectl logs -l app.kubernetes.io/name=ingress-nginx -f
+          ```
+
+      Only if using ingress controller:
       Add the domain to your /etc/hosts:
+
+          ```bash
+          echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
+          ```
+
+      Create AWS credentials secret for the gRPC server:
+
         ```bash
-         echo "127.0.0.1 api.drivedeposits.local" | sudo tee -a /etc/hosts
+        kubectl create secret generic aws-credentials \
+          --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+          --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+          --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+        ```
+
+      To verify the secret:
+
+        ```bash
+        kubectl get secret aws-credentials -o json
         ```
 
       Deploy the services:
-      ```bash
-      just k8s-grpc-server
-      just k8s-rest-server
-      ```
+
+          ```bash
+          just k8s-grpc-server
+          just k8s-rest-server
+          ```
 
       The REST API will now be accessible at http://api.drivedeposits.local
 
 #### Test microservices integration
+
+In justfile set
+for native and docker-compose:
+rest_gateway_server_host := "http://localhost:3000"
+And
+for k8s with ingress:
+rest_gateway_server_host := "http://api.drivedeposits.local"
 
 Send an HTTP request to the REST gateway server, which communicates with other microservices:
 
@@ -590,4 +674,4 @@ maintaining their individual identities within the Rust ecosystem.
 
 [Back to Table of Contents](#table-of-contents)
 
-[Copyright (c) 2024 Rohit Sachdeva](LICENSE)
+[Copyright (c) 2024-2025 Rohit Sachdeva](LICENSE)

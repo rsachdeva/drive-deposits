@@ -378,8 +378,12 @@ localstack-clean-build-drive-deposit-event-rules: clean-build-drive-deposit-even
 # however had to exclude br since in curl not directly supported in curl verison 8.7.1
 # the request.http supports it so alternatively that can be used for br brotli compression
 # Define variables
+# for k8s with ingress
 
-rest_gateway_server_host := "http://localhost:3000"
+rest_gateway_server_host := "http://api.drivedeposits.local"
+
+#rest_gateway_server_host := "http://localhost:3000"
+
 token := "Bearer token"
 
 # Recipe for the POST request with root path
@@ -674,18 +678,18 @@ docker-prune:
 
 # k8s for local -- uses local images
 k8s-grpc-server:
-    docker build -t drive-deposits-grpc-server:latest -f Dockerfile.grpc . && \
-    kubectl apply -f k8s/grpc-server.yaml
+    docker build -t k8s-drive-deposits-grpc-server:latest -f Dockerfile.grpc . && \
+    kubectl apply -f grpc-server.yaml
 
 k8s-grpc-server-delete:
-    kubectl delete -f k8s/grpc-server.yaml
+    kubectl delete -f grpc-server.yaml
 
 k8s-rest-server:
-    docker build -t drive-deposits-rest-server:latest -f Dockerfile.rest . && \
-    kubectl apply -f k8s/rest-server.yaml
+    docker build -t k8s-drive-deposits-rest-gateway-server:latest -f Dockerfile.rest.gateway . && \
+    kubectl apply -f rest-server.yaml
 
 k8s-rest-server-delete:
-    kubectl delete -f k8s/rest-server.yaml
+    kubectl delete -f rest-server.yaml
 
 # for git release tags
 git-tag-add-local TAG:
@@ -695,10 +699,10 @@ git-tag-add-force-local TAG:
     git tag -a {{ TAG }} -f -m "Release version {{ TAG }}"
 
 git-tag-add-remote TAG:
-    git push origin {{ TAG }}
+    git push origin refs/tags/{{ TAG }}
 
 git-tag-add-force-remote TAG:
-    git push origin {{ TAG }} --force
+    git push origin refs/tags/{{ TAG }} --force
 
 git-tag-delete-local TAG:
     git tag -d {{ TAG }}
