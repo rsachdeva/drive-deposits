@@ -9,12 +9,26 @@
 ## Table of Contents
 
 - [DriveDeposits System Design and Microservices Architecture: Watch Ingestion and Query Workflows](#drivedeposits-system-design-and-microservices-architecture-watch-ingestion-and-query-workflows)
+    - [System Design](#system-design)
+    - [Workflow Videos](#workflow-videos)
+        - [Ingestion Workflow Videos](#ingestion-workflow-videos)
+            - [Valid Portfolio Request](#valid-portfolio-request)
+            - [Portfolio request and response](#portfolio-request-and-response)
+        - [Query Workflow Videos](#query-workflow-videos)
+            - [Query API Retrieves a list of portfolios based on the delta growth criteria](#query-api-retrieves-a-list-of-portfolios-based-on-the-delta-growth-criteria)
+            - [Query API Retrieves a list of banks for a portfolio based on the delta growth criteria](#query-api-retrieves-a-list-of-banks-for-a-portfolio-based-on-the-delta-growth-criteria)
+            - [Query API Retrieves a list of deposits for a portfolio based on the delta growth criteria](#query-api-retrieves-a-list-of-deposits-for-a-portfolio-based-on-the-delta-growth-criteria)
+            - [Query API Retrieves a list of deposits for a portfolio based on the maturity date criteria](#query-api-retrieves-a-list-of-deposits-for-a-portfolio-based-on-the-maturity-date-criteria)
 - [Domain Driven Terminology](#domain-driven-terminology)
 - [DriveDeposits: Architectural Pillars](#drivedeposits-architectural-pillars)
 - [Synchronous Microservices Components](#synchronous-microservices-components)
 - [Asynchronous Microservices Components](#asynchronous-microservices-components)
 - [Bridging Synchronous and Asynchronous Components In DriveDeposits Microservices](#bridging-synchronous-and-asynchronous-components-in-drivedeposits-microservices)
 - [Deployment of Microservices](#deployment-of-microservices)
+    - Serverless: AWS using SAM which uses CloudFormation under the
+      hood[#serverless-aws-using-sam-which-uses-cloudformation-under-the-hood]
+    - Server-based: Run the REST and gRPC servers Natively, With Docker Compose And
+      Kubernetes![#server-based-run-the-rest-and-grpc-servers-natively-with-docker-compose-and-kubernetes]
 - [Hybrid Integration Testing Tool](#hybrid-integration-testing-tool)
 - [Running Tests](#running-tests)
     - [Integration tests](#integration-tests)
@@ -30,9 +44,11 @@
 
 ### DriveDeposits System Design and Microservices Architecture: Watch Ingestion and Query Workflows
 
+#### System Design
+
 ![DriveDeposits Design](DriveDeposits.drawio.svg)
 
-#### You can watch the quick videos online listed by workflow
+#### Workflow Videos
 
 #### Ingestion Workflow Videos
 
@@ -46,13 +62,13 @@
 
 #### Query Workflow Videos
 
-#### [Query API Retrieves a list of portfolios based on the delta growth criteria retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending order](https://vimeo.com/1042543613)
+#### [Query API Retrieves a list of portfolios based on the delta growth criteria](https://vimeo.com/1042543613)
 
-#### [Query API Retrieves a list of banks for a portfolio based on the delta growth criteria retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending order](https://vimeo.com/1042543640)
+#### [Query API Retrieves a list of banks for a portfolio based on the delta growth criteria](https://vimeo.com/1042543640)
 
-#### [Query API Retrieves a list of deposits for a portfolio based on the delta growth criteria retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending order](https://vimeo.com/1042543632)
+#### [Query API Retrieves a list of deposits for a portfolio based on the delta growth criteria](https://vimeo.com/1042543632)
 
-#### [Query API Retrieves a list of deposits for a portfolio based on the maturity date criteria retrieving the top 'k' items (where 'k' is the number defined by the user in the query) in ascending or descending order](https://vimeo.com/1042543620)
+#### [Query API Retrieves a list of deposits for a portfolio based on the maturity date criteria](https://vimeo.com/1042543620)
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -280,7 +296,7 @@ microservices ecosystem.
 
 ### Deployment of Microservices
 
-- **Serverless**: AWS using SAM which uses CloudFormation under the hood
+- Serverless: AWS using SAM which uses CloudFormation under the hood
 
 This project uses SAM (Serverless Application Model) for deploying the following AWS resources that support our
 microservices architecture:
@@ -322,7 +338,7 @@ related resources.
 
 `just deploy-drive-deposits-dynamodb-queries-only`
 
-- **Server-based**: Run the REST and gRPC servers Natively, With Docker Compose Or Kubernetes!
+- Server-based: Run the REST and gRPC servers Natively, With Docker Compose And Kubernetes!
     - **Natively** (without Docker)
 
       `just run-drive-deposits-grpc-server`
