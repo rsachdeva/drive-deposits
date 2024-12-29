@@ -1,3 +1,4 @@
+name: deploy
 services:
   drive-deposits-rest-gateway-server:
     build:
