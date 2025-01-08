@@ -2,7 +2,7 @@ use axum::extract::rejection::JsonRejection;
 use axum::extract::{FromRequest, Request};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
-use axum::{async_trait, Json};
+use axum::Json;
 use thiserror::Error as thisError;
 use tracing::info;
 use validator::Validate;
@@ -39,7 +39,6 @@ impl IntoResponse for Error {
 #[derive(Debug)]
 pub struct ValidateCalculateRequest(pub CalculatePortfolioRequest);
 
-#[async_trait]
 impl<S> FromRequest<S> for ValidateCalculateRequest
 where
     S: Send + Sync,

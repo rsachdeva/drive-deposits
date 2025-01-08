@@ -4,17 +4,17 @@ version = "0.60.0"
 edition = "2021"
 
 [dependencies]
-serde = { version = "1.0.203", features = ["derive"] }
-serde_json = "1.0.117"
-tracing = "0.1.40"
-chrono = { version = "0.4.38", features = ["serde"] }
-chrono-tz = { version = "0.9.0", features = ["serde"] }
-rust_decimal = { version = "1.35.0", features = ["maths"] }
-rust_decimal_macros = "1.34.2"
-uuid = { version = "1.9.1", features = ["v4", "fast-rng", "macro-diagnostics", "serde"] }
-once_cell = "1.19.0"
-thiserror = "1.0.61"
-tokio = { version = "1.38.0", features = ["full"] }
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.135"
+tracing = "0.1.41"
+chrono = { version = "0.4.39", features = ["serde"] }
+chrono-tz = { version = "0.10.0", features = ["serde"] }
+rust_decimal = { version = "1.36.0", features = ["maths"] }
+rust_decimal_macros = "1.36.0"
+uuid = { version = "1.11.0", features = ["v4", "fast-rng", "macro-diagnostics", "serde"] }
+once_cell = "1.20.2"
+thiserror = "2.0.9"
+tokio = { version = "1.42.0", features = ["full"] }
 heck = "0.5.0"
 # workspace member depdenencies
 # proto generated dependency here the drive-deposits-proto-grpc-types is still package
@@ -23,6 +23,6 @@ drive-deposits-proto-grpc-types = { path = "../drive-deposits-proto-grpc-types" 
 drive-deposits-event-source = { path = "../drive-deposits-event-source" }
 
 [dev-dependencies]
-pretty_assertions = "1.4.0"
-tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
-anyhow = "1.0.86"
+pretty_assertions = "1.4.1"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+anyhow = "1.0.95"
