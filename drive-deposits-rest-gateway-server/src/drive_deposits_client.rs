@@ -1,4 +1,5 @@
-use axum::{async_trait, Json};
+use async_trait::async_trait;
+use axum::Json;
 use mockall::automock;
 use std::env::var;
 use tracing::{debug, debug_span, error, info};

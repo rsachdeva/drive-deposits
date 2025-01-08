@@ -5,18 +5,18 @@ edition = "2021"
 
 
 [dependencies]
-aws-config = { version = "1.5.4", features = ["behavior-version-latest"] }
-aws-sdk-eventbridge = "1.37.0"
-tokio = { version = "1.39.1", features = ["full"] }
-tracing = "0.1.40"
-thiserror = "1.0.63"
-serde_json = "1.0.117"
-serde = { version = "1.0.204", features = ["derive"] }
+aws-config = { version = "1.5.13", features = ["behavior-version-latest"] }
+aws-sdk-eventbridge = "1.56.0"
+tokio = { version = "1.42.0", features = ["full"] }
+tracing = "0.1.41"
+thiserror = "2.0.9"
+serde_json = "1.0.135"
+serde = { version = "1.0.217", features = ["derive"] }
 # workspace member depdenencies
 drive-deposits-rest-types = { path = "../drive-deposits-rest-types" }
 log = "0.4.22"
 
 [dev-dependencies]
-pretty_assertions = "1.4.0"
-tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
-anyhow = "1.0.86"
+pretty_assertions = "1.4.1"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+anyhow = "1.0.95"

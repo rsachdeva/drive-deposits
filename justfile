@@ -691,6 +691,10 @@ k8s-rest-server:
 k8s-rest-server-delete:
     kubectl delete -f rest-server.yaml
 
+# upgrade versions to latest not just patch with cargo update
+upgrade-incompatible:
+    cargo upgrade --incompatible
+
 # for git release tags
 git-tag-add-local TAG:
     git tag -a {{ TAG }} -m "Release version {{ TAG }}"
