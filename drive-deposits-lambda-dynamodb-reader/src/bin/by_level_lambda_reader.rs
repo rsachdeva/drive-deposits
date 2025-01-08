@@ -207,15 +207,15 @@ async fn main() -> Result<(), LambdaHttpError> {
             get(by_level_query_portfolios_delta_growth),
         )
         .route(
-            "/portfolios/:pk_portfolio_uuid/by-level-for-banks/delta-growth",
+            "/portfolios/{pk_portfolio_uuid}/by-level-for-banks/delta-growth",
             get(by_level_query_banks_delta_growth),
         )
         .route(
-            "/portfolios/:pk_portfolio_uuid/by-level-for-deposits/delta-growth",
+            "/portfolios/{pk_portfolio_uuid}/by-level-for-deposits/delta-growth",
             get(by_level_query_deposits_delta_growth),
         )
         .route(
-            "/portfolios/:pk_portfolio_uuid/by-level-for-deposits/maturity-date",
+            "/portfolios/{pk_portfolio_uuid}/by-level-for-deposits/maturity-date",
             get(by_level_query_deposits_maturity_date),
         )
         .with_state(db_handler);
