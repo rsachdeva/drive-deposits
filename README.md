@@ -694,21 +694,24 @@ AWS deployments.
 See cargo workspace members:
 [Cargo.toml](Cargo.toml)
 
-#### Types-specific crates and their purpose
+#### Type-specific Crates and Their Purpose
 
-The workspace includes several -types suffixed crates that handle domain models, type definitions, business logic, and
-specific persistence:
+The workspace includes several crates with the "-types" suffix that handle domain models, type definitions, conversions,
+and business logic:
 
 * **drive-deposits-rest-types**: REST API request/response types and validations
 * **drive-deposits-proto-grpc-types**: gRPC protocol buffer generated types
 * **drive-deposits-cal-types**: Core calculation domain models and business logic
-* **drive-deposits-lambda-db-types**: DynamoDB item types and conversions
+* **drive-deposits-lambda-db-types**: DynamoDB item types and conversions. Converts to aws_sdk_dynamodb::types::
+  AttributeValue for the writer, while actual persistence happens in drive-deposits-logs-lambda-target. The conversion
+  to query response types occurs here, which drive-deposits-lambda-dynamodb-reader lambda uses for sending JSON query
+  responses.
 
 This separation provides **Clean Architecture and Maintainability**: Each type crate has a clear, single responsibility.
-For example,
-drive-deposits-cal-types focuses purely on calculation domain logic while delegating event bridge implementation to
-drive-deposits-event-source. This makes the codebase more maintainable and easier to understand as the system grows.
-Hence, the -types crates represent a mature architectural pattern that scales well as the system evolves.
+For example, drive-deposits-cal-types focuses purely on calculation domain logic while delegating event bridge
+implementation to drive-deposits-event-source. This design makes the codebase more maintainable and easier to understand
+as the system grows. The "-types" crates represent a mature architectural pattern that scales effectively as the system
+evolves.
 
 #### Naming: why keeping prefix drive-deposits
 
