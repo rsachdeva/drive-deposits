@@ -694,32 +694,24 @@ AWS deployments.
 See cargo workspace members:
 [Cargo.toml](Cargo.toml)
 
-#### Types-specific crates and their purpose
+#### Type-specific Crates and Their Purpose
 
-The workspace includes several -types suffixed crates that handle domain models, type definitions, business logic and
-conversions:
+The workspace includes several crates with the "-types" suffix that handle domain models, type definitions, conversions,
+and business logic:
 
 * **drive-deposits-rest-types**: REST API request/response types and validations
 * **drive-deposits-proto-grpc-types**: gRPC protocol buffer generated types
 * **drive-deposits-cal-types**: Core calculation domain models and business logic
-* **drive-deposits-lambda-db-types**: DynamoDB item types and conversions
+* **drive-deposits-lambda-db-types**: DynamoDB item types and conversions. Converts to aws_sdk_dynamodb::types::
+  AttributeValue for the writer, while actual persistence happens in drive-deposits-logs-lambda-target. The conversion
+  to query response types occurs here, which drive-deposits-lambda-dynamodb-reader lambda uses for sending JSON query
+  responses.
 
-This separation provides key benefits:
-
-1. **Dependency Management**: Keeps dependencies lean by isolating type definitions. For example,
-   drive-deposits-rest-types prevents REST-specific dependencies from leaking into other components.
-
-2. **Clear Boundaries**: Each -types crate establishes clear domain boundaries and ownership of data models.
-
-3. **Reusability**: Types and conversion logic can be reused across multiple crates without circular dependencies. For
-   example, allows in module fashion re-use of drive-deposits-rest-types crates in various crates as required without
-   the actual axum dependency from drive-deposits-rest-gateway-server crate.
-
-4. **Evolution Flexibility**: While some of these crates could be merged as modules into their consuming crates, the
-   current separation allows evolution of the type system.
-
-The -types crates represent the current optimal structure based on the system's needs. As the codebase evolves, they
-could be mergedinto modules if tighter coupling provides clear advantages.
+This separation provides **Clean Architecture and Maintainability**: Each type crate has a clear, single responsibility.
+For example, drive-deposits-cal-types focuses purely on calculation domain logic while delegating event bridge
+implementation to drive-deposits-event-source. This design makes the codebase more maintainable and easier to understand
+as the system grows. The "-types" crates represent a mature architectural pattern that scales effectively as the system
+evolves.
 
 #### Naming: why keeping prefix drive-deposits
 
