@@ -52,20 +52,20 @@ See cargo workspace members:
 #### Type-specific Crates and Their Purpose
 
 The workspace includes several crates with the "-types" suffix that handle domain models, type definitions, conversions,
-and business logic:
+and business logic, with each crate maintaining focused dependencies for its specific purpose:
 
-* **drive-deposits-rest-types**: REST API request/response types and validations
-* **drive-deposits-proto-grpc-types**: gRPC protocol buffer generated types
-* **drive-deposits-cal-types**: Core calculation domain models and business logic
+* **drive-deposits-cal-types**: Core calculation domain models and business logic. The protocol-specific gRPC and REST
+  implementations reside in drive-deposits-grpc-server and drive-deposits-rest-gateway-server respectively. While this
+  crate sends events to EventBridge, the EventBridge implementation lives in drive-deposits-event-source, enabling
+  drive-deposits-cal-types to maintain focused dependencies.
 * **drive-deposits-lambda-db-types**: DynamoDB item types and conversions. Converts to aws_sdk_dynamodb::types::
   AttributeValue for the writer, while actual persistence happens in drive-deposits-logs-lambda-target. The conversion
   to query response types occurs here, which drive-deposits-lambda-dynamodb-reader lambda uses for sending JSON query
   responses.
+* **drive-deposits-rest-types**: REST API request/response types and validations
+* **drive-deposits-proto-grpc-types**: gRPC protocol buffer generated types
 
 This separation provides **Clean Architecture and Maintainability**: Each type crate has a clear, single responsibility.
-For example, drive-deposits-cal-types focuses purely on calculation domain logic while delegating event bridge
-implementation to drive-deposits-event-source. This design makes the codebase more maintainable and easier to understand
-as the system grows.
 
 #### Naming: why keeping prefix drive-deposits
 
