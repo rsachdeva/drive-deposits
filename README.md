@@ -8,6 +8,7 @@
 
 ## Table of Contents
 
+- [Member crates in workspace](#member-crates-in-workspace)
 - [DriveDeposits System Design and Microservices Architecture: Watch Ingestion and Query Workflows](#drivedeposits-system-design-and-microservices-architecture-watch-ingestion-and-query-workflows)
     - [System Design](#system-design)
     - [Workflow Videos](#workflow-videos)
@@ -42,7 +43,59 @@
 - [Development Tool: LocalStack](#development-tool-localstack)
 - [Clean And Build](#clean-and-build)
 - [Configurations for DriveDeposits](#configurations-for-drivedeposits)
-- [Member crates in workspace](#member-crates-in-workspace)
+
+### Member crates in workspace
+
+See cargo workspace members:
+[Cargo.toml](Cargo.toml)
+
+#### Type-specific Crates and Their Purpose
+
+The workspace includes several crates with the "-types" suffix that handle domain models, type definitions, conversions,
+and business logic, with each crate maintaining focused dependencies for its specific purpose:
+
+* **drive-deposits-cal-types**: Core calculation domain models and business logic. The protocol-specific gRPC and REST
+  implementations reside in drive-deposits-grpc-server and drive-deposits-rest-gateway-server respectively. While this
+  crate sends events to EventBridge, the EventBridge implementation lives in drive-deposits-event-source, enabling
+  drive-deposits-cal-types to maintain focused dependencies.
+* **drive-deposits-lambda-db-types**: DynamoDB item types and conversions. Converts to aws_sdk_dynamodb::types::
+  AttributeValue for the writer, while actual persistence happens in drive-deposits-logs-lambda-target. The conversion
+  to query response types occurs here, which drive-deposits-lambda-dynamodb-reader lambda uses for sending JSON query
+  responses.
+* **drive-deposits-rest-types**: REST API request/response types and validations
+* **drive-deposits-proto-grpc-types**: gRPC protocol buffer generated types
+
+This separation provides **Clean Architecture and Maintainability**: Each type crate has a clear, single responsibility.
+
+#### Naming: why keeping prefix drive-deposits
+
+Using the "drive-deposits-" prefix for crate names clearly distinguishes these as separate crates within
+the workspace, not just modules within a single crate. This distinction is crucial for understanding the project
+structure and for managing dependencies. It also allows for more flexibility in terms of versioning and publishing each
+crate independently if needed. This naming convention effectively communicates the relationship between the crates while
+maintaining their individual identities within the Rust ecosystem.
+
+#### Summary of the Responsibilities for crates drive-deposits-logs-lambda-target and drive-deposits-lambda-dynamodb-reader in Workspace
+
+###### drive-deposits-logs-lambda-target:
+
+* Triggered by EventBridge
+* Handles log groups based on event rules
+* Writes data to DynamoDB
+* Error handling when adding items in DynamoDB indicates the source of the error and the level context in which it
+  occurred.
+* Error logs can be seen in CloudWatch Logs
+
+###### drive-deposits-lambda-dynamodb-reader:
+
+* Responsible for querying data from DynamoDB
+* Uses Axum in Lambda
+* Exposed through an API Gateway
+* Error handling when reading items from DynamoDB and creating Response for Query requests indicates the source of the
+  error and the level context in which it occurred.
+* Error logs can be seen in CloudWatch Logs
+
+[Back to Table of Contents](#table-of-contents)
 
 ### DriveDeposits System Design and Microservices Architecture: Watch Ingestion and Query Workflows
 
@@ -686,60 +739,6 @@ The project uses custom configurations defined in `.cargo/config.toml`:
 
 These configurations allow for flexible development and testing environments, enabling easy switching between local and
 AWS deployments.
-
-[Back to Table of Contents](#table-of-contents)
-
-### Member crates in workspace
-
-See cargo workspace members:
-[Cargo.toml](Cargo.toml)
-
-#### Type-specific Crates and Their Purpose
-
-The workspace includes several crates with the "-types" suffix that handle domain models, type definitions, conversions,
-and business logic:
-
-* **drive-deposits-rest-types**: REST API request/response types and validations
-* **drive-deposits-proto-grpc-types**: gRPC protocol buffer generated types
-* **drive-deposits-cal-types**: Core calculation domain models and business logic
-* **drive-deposits-lambda-db-types**: DynamoDB item types and conversions. Converts to aws_sdk_dynamodb::types::
-  AttributeValue for the writer, while actual persistence happens in drive-deposits-logs-lambda-target. The conversion
-  to query response types occurs here, which drive-deposits-lambda-dynamodb-reader lambda uses for sending JSON query
-  responses.
-
-This separation provides **Clean Architecture and Maintainability**: Each type crate has a clear, single responsibility.
-For example, drive-deposits-cal-types focuses purely on calculation domain logic while delegating event bridge
-implementation to drive-deposits-event-source. This design makes the codebase more maintainable and easier to understand
-as the system grows. The "-types" crates represent a mature architectural pattern that scales effectively as the system
-evolves.
-
-#### Naming: why keeping prefix drive-deposits
-
-Using the "drive-deposits-" prefix for crate names clearly distinguishes these as separate crates within
-the workspace, not just modules within a single crate. This distinction is crucial for understanding the project
-structure and for managing dependencies. It also allows for more flexibility in terms of versioning and publishing each
-crate independently if needed. This naming convention effectively communicates the relationship between the crates while
-maintaining their individual identities within the Rust ecosystem.
-
-#### Summary of the Responsibilities for crates drive-deposits-logs-lambda-target and drive-deposits-lambda-dynamodb-reader in Workspace
-
-###### drive-deposits-logs-lambda-target:
-
-* Triggered by EventBridge
-* Handles log groups based on event rules
-* Writes data to DynamoDB
-* Error handling when adding items in DynamoDB indicates the source of the error and the level context in which it
-  occurred.
-* Error logs can be seen in CloudWatch Logs
-
-###### drive-deposits-lambda-dynamodb-reader:
-
-* Responsible for querying data from DynamoDB
-* Uses Axum in Lambda
-* Exposed through an API Gateway
-* Error handling when reading items from DynamoDB and creating Response for Query requests indicates the source of the
-  error and the level context in which it occurred.
-* Error logs can be seen in CloudWatch Logs
 
 [Back to Table of Contents](#table-of-contents)
 
