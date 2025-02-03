@@ -4,13 +4,13 @@ version = "0.60.0"
 edition = "2021"
 
 [dependencies]
-prost = "0.13.4"
-tonic = "0.12.3"
-tracing = "0.1.41"
-heck = "0.5.0"
+prost = { workspace = true }
+tonic = { workspace = true }
+tracing = { workspace = true }
+heck = { workspace = true }
 
 # workspace member depdenencies
 drive-deposits-rest-types = { path = "../drive-deposits-rest-types" }
 
 [build-dependencies]
-tonic-build = "0.12.3"
+tonic-build = { workspace = true }
