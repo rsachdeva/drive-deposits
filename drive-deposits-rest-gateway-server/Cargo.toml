@@ -4,19 +4,19 @@ version = "0.60.0"
 edition = "2021"
 
 [dependencies]
-axum = { version = "0.8.1", features = ["macros"] }
-tokio = { version = "1.42.0", features = ["full"] }
-serde = { version = "1.0.217", features = ["derive"] }
-thiserror = "2.0.9"
-validator = { version = "0.19.0", features = ["derive"] }
-tonic = "0.12.3"
-tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+axum = { workspace = true, features = ["macros"] }
+tokio = { workspace = true, features = ["full"] }
+serde = { workspace = true, features = ["derive"] }
+thiserror = { workspace = true }
+validator = { workspace = true, features = ["derive"] }
+tonic = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
 # tower and tower-http
-tower = { version = "0.5.2", features = ["full"] }
-tower-http = { version = "0.6.2", features = ["full"] }
-mockall = "0.13.1"
-async-trait = "0.1.85"
+tower = { workspace = true, features = ["full"] }
+tower-http = { workspace = true, features = ["full"] }
+mockall = { workspace = true }
+async-trait = { workspace = true }
 
 # workspace member depdenencies
 drive-deposits-rest-types = { path = "../drive-deposits-rest-types" }
@@ -26,4 +26,4 @@ drive-deposits-proto-grpc-types = { path = "../drive-deposits-proto-grpc-types" 
 
 
 [dev-dependencies]
-pretty_assertions = "1.4.1"
+pretty_assertions = { workspace = true }
