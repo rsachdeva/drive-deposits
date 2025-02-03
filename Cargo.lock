@@ -1154,7 +1154,7 @@ checksum = "1435fa1053d8b2fbbe9be7e97eca7f33d37b28409959813daefc1446a14247f1"
 
 [[package]]
 name = "drive-deposits-cal-types"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1177,7 +1177,7 @@ dependencies = [
 
 [[package]]
 name = "drive-deposits-check-cmd"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "anyhow",
  "assert_cmd",
@@ -1199,7 +1199,7 @@ dependencies = [
 
 [[package]]
 name = "drive-deposits-event-source"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "anyhow",
  "aws-config",
@@ -1213,7 +1213,7 @@ dependencies = [
 
 [[package]]
 name = "drive-deposits-grpc-server"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "drive-deposits-cal-types",
  "drive-deposits-event-source",
@@ -1229,7 +1229,7 @@ dependencies = [
 
 [[package]]
 name = "drive-deposits-lambda-db-types"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "aws-sdk-dynamodb",
  "drive-deposits-rest-types",
@@ -1242,7 +1242,7 @@ dependencies = [
 
 [[package]]
 name = "drive-deposits-lambda-dynamodb-reader"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "aws-config",
  "aws-sdk-dynamodb",
@@ -1259,7 +1259,7 @@ dependencies = [
 
 [[package]]
 name = "drive-deposits-logs-lambda-target"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "aws-config",
  "aws-sdk-dynamodb",
@@ -1276,7 +1276,7 @@ dependencies = [
 
 [[package]]
 name = "drive-deposits-proto-grpc-types"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "drive-deposits-rest-types",
  "heck",
@@ -1288,7 +1288,7 @@ dependencies = [
 
 [[package]]
 name = "drive-deposits-rest-gateway-server"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "async-trait",
  "axum 0.8.1",
@@ -1309,7 +1309,7 @@ dependencies = [
 
 [[package]]
 name = "drive-deposits-rest-types"
-version = "0.60.0"
+version = "0.70.0"
 dependencies = [
  "chrono",
  "chrono-tz",
