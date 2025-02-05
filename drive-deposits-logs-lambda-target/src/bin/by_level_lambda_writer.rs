@@ -4,11 +4,12 @@ use drive_deposits_logs_lambda_target::dynamodb::DriveDepositsDb;
 use drive_deposits_rest_types::rest_types::CalculatePortfolioResponse;
 use lambda_runtime::{
     run, service_fn,
-    tracing::{debug, error, info_span, init_default_subscriber},
+    tracing::{debug, error, info_span, init_default_subscriber, instrument, Instrument},
     Error, LambdaEvent,
 };
 use serde_json::from_value;
 
+#[instrument(skip(db_handler, event))]
 async fn banks_level_handler(
     db_handler: &DriveDepositsDb,
     event: LambdaEvent<EventBridgeEvent>,
@@ -33,6 +34,7 @@ async fn banks_level_handler(
         db_handler.table_name.as_str(),
         event_target_response,
     )
+    .instrument(span)
     .await?;
 
     Ok(())
@@ -49,7 +51,9 @@ async fn main() -> Result<(), Error> {
 
     // service_fn returns ServiceFn that implements FnMut so cannot pass ownership of db_handler
     // closure is `FnOnce` if it moves the variable `db_handler` out of its environment
-    run(service_fn(|event| banks_level_handler(&db_handler, event))).await?;
+    run(service_fn(|event| banks_level_handler(&db_handler, event)))
+        .instrument(span)
+        .await?;
 
     Ok(())
 }

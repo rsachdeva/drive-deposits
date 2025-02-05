@@ -84,7 +84,10 @@ async fn build_from_new_bank(
 ) -> Result<Bank, CalculationHaltError> {
     // using spawn blocking for synchronous calculation code
     let bank_with_outcome = spawn_blocking(move || -> Result<Bank, CalculationHaltError> {
-        info!("task spawned for new_bank: {:?}", new_bank.name);
+        info!(
+            "task spawned for actual calculation for new_bank: {:?}",
+            new_bank.name
+        );
         let deposits = build_from_new_deposits(new_bank.new_deposits, new_delta.clone())?;
         let outcome = build_outcome_from_deposits(&deposits, new_delta.clone().as_ref());
         let bank = Bank {
