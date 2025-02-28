@@ -379,9 +379,11 @@ localstack-clean-build-drive-deposit-event-rules: clean-build-drive-deposit-even
 # the request.http supports it so alternatively that can be used for br brotli compression
 # Define variables
 # for k8s with ingress
-#rest_gateway_server_host := "http://api.drivedeposits.local"
 
-rest_gateway_server_host := "http://localhost:3000"
+rest_gateway_server_host := "http://api.drivedeposits.local"
+
+#rest_gateway_server_host := "http://localhost:3000"
+
 token := "Bearer token"
 
 # Recipe for the POST request with root path
